@@ -1,0 +1,98 @@
+name: replay-and-paper
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source manifests
+        run: |
+          set -euo pipefail
+          sha256sum -c MANIFEST.sha256
+          sha256sum -c ADMITTED.sha256
+      - name: Manifest covers every tracked file
+        run: |
+          set -euo pipefail
+          git ls-files | grep -vxE 'MANIFEST\.sha256|ADMITTED\.sha256' | sort > tracked.txt
+          sed -E 's/^[0-9a-f]{64}  //' MANIFEST.sha256 | sort > manifested.txt
+          diff -u manifested.txt tracked.txt
+      - name: Exact coverings and twelve guarded mutants
+        working-directory: replay
+        run: |
+          set -euo pipefail
+          python -B verify.py | tee verify.out
+          grep -qF 'Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000' verify.out
+          grep -qF 'CERTIFIED primary centered cover: reserve=159/500; leaves=159; max_depth=20; area=1; head_intervals=43' verify.out
+          grep -qF 'CERTIFIED independent centered cover: reserve=159/500; leaves=466; max_depth=11; area=4/3; head_intervals=43' verify.out
+          grep -qF 'PASS: two independent exact coverings and all twelve mutants rejected (each mutant exit 1).' verify.out
+          test "$(grep -c '^EXIT: 1 EXPECTED: 1' verify.out)" -eq 12
+          test "$(grep -c '^REJECT:' verify.out)" -eq 12
+          test "$(grep -c '^EXIT: 0 EXPECTED: 0' verify.out)" -eq 2
+      - name: Pins name thirteen inherited sources
+        run: |
+          set -euo pipefail
+          python -B -c "import json; pins=json.load(open('replay/source-pins.json'))['source_sha256']; assert len(pins)==13; assert all(len(v)==64 for v in pins.values()); print('13 pins')"
+      - name: Public prose safeguards
+        run: |
+          set -euo pipefail
+          if grep -nE '—|D:/|C:/|C:\\\\|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b|reserved DOI|DOI-PAPER|DOI-SUPP' paper/main.tex README.md CITATION.cff; then exit 1; fi
+          grep -qF '10.5281/zenodo.24407691' paper/main.tex
+          grep -qF '10.5281/zenodo.24407693' paper/main.tex
+          grep -qF 'This preprint has not been peer reviewed.' README.md
+          grep -qF 'The floor `0.185411` is a limit of the edge-reserve method' README.md
+          grep -qF 'Whether the supremum `S_cent` equals `C_inf` or lies strictly above it is open.' README.md
+          if grep -nE '—|D:/|C:/|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b' replay/CHECKS.txt; then exit 1; fi
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SOURCE_DATE_EPOCH: "1795132800"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tectonic and poppler
+        run: |
+          set -euo pipefail
+          curl -fsSL https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-x86_64-unknown-linux-gnu.tar.gz | sudo tar -xz -C /usr/local/bin
+          test "$(tectonic --version)" = "Tectonic 0.17.0"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+      - name: Build the manuscript
+        working-directory: paper
+        run: |
+          set -euo pipefail
+          tectonic --keep-logs main.tex
+          if grep -nE 'Overfull|Undefined|Citation.*undefined|There were undefined' main.log; then exit 1; fi
+          if grep -nE 'Underfull' main.log; then exit 1; fi
+          test -s main.pdf
+          pdfinfo -url main.pdf > urls.txt
+          grep -qF 'https://doi.org/10.5281/zenodo.24407691' urls.txt
+          grep -qF 'https://doi.org/10.5281/zenodo.24407693' urls.txt
+          test "$(grep -cF 'https://doi.org/10.5281/zenodo.2440769' urls.txt)" -eq 2
+          pdfinfo main.pdf | grep -qE '^Pages:[[:space:]]+12$'
+          pdftotext main.pdf main.txt
+          if grep -nE '—|D:/|C:/|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b|DOI-PAPER|DOI-SUPP' main.txt; then exit 1; fi
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'This preprint has not been peer reviewed.'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'AI agents generated the proofs, code, and manuscript drafts under D. Rens'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'Separate AI agents performed the independent reviews.'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '0.1858777115'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '10.5281/zenodo.24407691'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '10.5281/zenodo.24407693'
+          sha256sum main.pdf
+          md5sum main.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: centered-multichannel-eliashberg-ceiling-paper
+          path: |
+            paper/main.pdf
+            paper/main.log
+            paper/main.tex
+            paper/refs.bib
+            paper/urls.txt
+            paper/main.txt
+          if-no-files-found: error

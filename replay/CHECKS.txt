@@ -1,0 +1,51 @@
+COMMAND: python -B replay\replay.py
+EXIT: 0 EXPECTED: 0 SECONDS: 26.516
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+CERTIFIED primary centered cover: reserve=159/500; leaves=159; max_depth=20; area=1; head_intervals=43
+COMMAND: python -B replay\replay.py --mutant pin
+EXIT: 1 EXPECTED: 1 SECONDS: 1.296
+REJECT: inherited proof bytes ../FINITE-ENERGY/RIGOR.md
+COMMAND: python -B replay\replay.py --mutant strict-budget
+EXIT: 1 EXPECTED: 1 SECONDS: 0.297
+REJECT: strict reporting margin
+COMMAND: python -B replay\replay.py --mutant coverage-gap
+EXIT: 1 EXPECTED: 1 SECONDS: 27.047
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+REJECT: complete residual area, no coverage gaps
+COMMAND: python -B replay\replay.py --mutant reserve-too-high
+EXIT: 1 EXPECTED: 1 SECONDS: 10.11
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+REJECT: compact rectangle subdivision depth
+COMMAND: python -B replay\replay.py --mutant hankel-tail
+EXIT: 1 EXPECTED: 1 SECONDS: 0.515
+REJECT: reduced Hankel row-1 bound
+COMMAND: python -B replay\replay.py --mutant centered-cone
+EXIT: 1 EXPECTED: 1 SECONDS: 0.313
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+REJECT: admissible lower tangent line
+COMMAND: python -B replay\independent.py
+EXIT: 0 EXPECTED: 0 SECONDS: 52.625
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+CERTIFIED independent centered cover: reserve=159/500; leaves=466; max_depth=11; area=4/3; head_intervals=43
+COMMAND: python -B replay\independent.py --mutant pin
+EXIT: 1 EXPECTED: 1 SECONDS: 0.203
+REJECT: inherited proof bytes ../FINITE-ENERGY/RIGOR.md
+COMMAND: python -B replay\independent.py --mutant strict-budget
+EXIT: 1 EXPECTED: 1 SECONDS: 0.094
+REJECT: strict reporting margin
+COMMAND: python -B replay\independent.py --mutant coverage-gap
+EXIT: 1 EXPECTED: 1 SECONDS: 48.531
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+REJECT: independent full residual area
+COMMAND: python -B replay\independent.py --mutant reserve-too-high
+EXIT: 1 EXPECTED: 1 SECONDS: 30.453
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+REJECT: independent full-domain quadtree depth
+COMMAND: python -B replay\independent.py --mutant completion-sign
+EXIT: 1 EXPECTED: 1 SECONDS: 0.187
+REJECT: independent stage-0 completion rationalization
+COMMAND: python -B replay\independent.py --mutant tangent-intercept
+EXIT: 1 EXPECTED: 1 SECONDS: 0.125
+Exact endpoint enclosures: 46469427867979/250000000000000 185877711471917/1000000000000000 185891338370617/1000000000000000 92945669185309/500000000000000
+REJECT: certified tangent intercept nonpositive
+PASS: two independent exact coverings and all twelve mutants rejected (each mutant exit 1).
