@@ -5,7 +5,7 @@ permissions:
 jobs:
   replay:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,7 +22,11 @@ jobs:
           git ls-files | grep -vxE 'MANIFEST\.sha256|ADMITTED\.sha256' | sort > tracked.txt
           sed -E 's/^[0-9a-f]{64}  //' MANIFEST.sha256 | sort > manifested.txt
           diff -u manifested.txt tracked.txt
-      - name: Exact coverings and twelve guarded mutants
+      - name: No review-cycle file in the tree
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -niE '(^|/)reviews?/|review|fix|scoping|\.v1\.'; then exit 1; fi
+      - name: Version 1 exact coverings and twelve guarded mutants
         working-directory: replay
         run: |
           set -euo pipefail
@@ -34,6 +38,58 @@ jobs:
           test "$(grep -c '^EXIT: 1 EXPECTED: 1' verify.out)" -eq 12
           test "$(grep -c '^REJECT:' verify.out)" -eq 12
           test "$(grep -c '^EXIT: 0 EXPECTED: 0' verify.out)" -eq 2
+      - name: Version 2 exact coverings and twenty guarded mutants
+        run: |
+          set -euo pipefail
+          run_expect() {
+            expected=$1
+            shift
+            set +e
+            "$@" > run.out 2>&1
+            rc=$?
+            set -e
+            cat run.out
+            test "$rc" -eq "$expected" || { echo "exit $rc, expected $expected: $*"; return 1; }
+            if [ "$expected" -eq 1 ] && ! grep -q '^REJECT' run.out; then
+              echo "mutant exited 1 without a REJECT line at a guard: $*"
+              return 1
+            fi
+          }
+          run_expect 0 python -B records/aniso-close/replay.py
+          grep -qF 'EXACT primary three-stage cover: d=3189/10000; leaves=367; depth=24; area=1; heads=43' run.out
+          grep -qF 'C_bound = sqrt(6811/5000)/(2*pi)' run.out
+          grep -qF 'C_report = sqrt(341/250)/(2*pi)' run.out
+          for mutant in budget tail identity denominator cone coverage reserve strict head-divisor ratio-index; do
+            run_expect 1 python -B records/aniso-close/replay.py --mutant "$mutant"
+          done
+          run_expect 0 python -B records/aniso-close/independent.py
+          grep -qF 'EXACT independent three-stage cover: d=3189/10000; leaves=1036; depth=13; area=4/3; heads=43' run.out
+          grep -qF 'C_bound = sqrt(6811/5000)/(2*pi)' run.out
+          grep -qF 'C_report = sqrt(341/250)/(2*pi)' run.out
+          for mutant in budget tail identity denominator cone coverage reserve strict head-divisor ratio-index; do
+            run_expect 1 python -B records/aniso-close/independent.py --mutant "$mutant"
+          done
+      - name: Shipped transcript records the same runs
+        run: |
+          set -euo pipefail
+          for line in \
+            'EXACT primary three-stage cover: d=3189/10000; leaves=367; depth=24; area=1; heads=43' \
+            'EXACT independent three-stage cover: d=3189/10000; leaves=1036; depth=13; area=4/3; heads=43' \
+            'C_bound = sqrt(6811/5000)/(2*pi)' \
+            'C_report = sqrt(341/250)/(2*pi)' \
+            'UNEXPECTED: []' \
+            'CHECK_RUNNER_EXIT: 0' \
+            'FINAL_VERIFIER_RUNNER_EXIT: 0' \
+            'UNRESOLVED_TIME_BUDGET: 3190/10000' \
+            '0.9999372823416597'; do
+            grep -qF "$line" records/aniso-close/CHECKS.txt || { echo "missing from transcript: $line"; exit 1; }
+          done
+          for mutant in budget tail identity denominator cone coverage reserve strict head-divisor ratio-index; do
+            for program in replay independent; do
+              grep -qF -- "aniso-close\\$program.py --mutant $mutant" records/aniso-close/CHECKS.txt \
+                || { echo "transcript lacks $program.py $mutant"; exit 1; }
+            done
+          done
       - name: Pins name thirteen inherited sources
         run: |
           set -euo pipefail
@@ -41,16 +97,20 @@ jobs:
       - name: Public prose safeguards
         run: |
           set -euo pipefail
-          if grep -nE '—|D:/|C:/|C:\\\\|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b|reserved DOI|DOI-PAPER|DOI-SUPP' paper/main.tex README.md CITATION.cff; then exit 1; fi
-          grep -qF '10.5281/zenodo.24407691' paper/main.tex
-          grep -qF '10.5281/zenodo.24407693' paper/main.tex
+          if grep -nE '—|D:/|C:/|C:\\\\|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b|reserved DOI|DOI-PAPER|DOI-SUPP' paper/main.tex README.md CLAIMS.md CITATION.cff records/aniso-close/CHECKS.txt records/aniso-close/RIGOR.md records/aniso-close/replay.py records/aniso-close/independent.py; then exit 1; fi
+          grep -qF '10.5281/zenodo.24410276' paper/main.tex
+          grep -qF '10.5281/zenodo.24410275' paper/main.tex
+          test "$(grep -cF '10.5281/zenodo.24410' paper/main.tex)" -eq 2
           grep -qF 'This preprint has not been peer reviewed.' README.md
+          grep -qF 'AI agents generated the proofs, code, and manuscript drafts under D. Rens' README.md
+          grep -qF 'Separate AI agents performed the independent reviews.' README.md
           grep -qF 'The floor `0.185411` is a limit of the edge-reserve method' README.md
           grep -qF 'Whether the supremum `S_cent` equals `C_inf` or lies strictly above it is open.' README.md
-          if grep -nE '—|D:/|C:/|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b' replay/CHECKS.txt; then exit 1; fi
+          grep -qF 'review records removed from the tree; available in version 1 history' README.md
+          if grep -nE '—|D:/|C:/|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b' replay/CHECKS.txt records/aniso-close/CHECKS.txt; then exit 1; fi
   paper:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       SOURCE_DATE_EPOCH: "1795132800"
     steps:
@@ -71,18 +131,23 @@ jobs:
           if grep -nE 'Underfull' main.log; then exit 1; fi
           test -s main.pdf
           pdfinfo -url main.pdf > urls.txt
-          grep -qF 'https://doi.org/10.5281/zenodo.24407691' urls.txt
-          grep -qF 'https://doi.org/10.5281/zenodo.24407693' urls.txt
-          test "$(grep -cF 'https://doi.org/10.5281/zenodo.2440769' urls.txt)" -eq 2
-          pdfinfo main.pdf | grep -qE '^Pages:[[:space:]]+12$'
+          grep -qF 'https://doi.org/10.5281/zenodo.24410276' urls.txt
+          grep -qF 'https://doi.org/10.5281/zenodo.24410275' urls.txt
+          test "$(grep -cF 'https://doi.org/10.5281/zenodo.2441027' urls.txt)" -eq 2
+          pdfinfo main.pdf | grep -qE '^Pages:[[:space:]]+14$'
           pdftotext main.pdf main.txt
           if grep -nE '—|D:/|C:/|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b|DOI-PAPER|DOI-SUPP' main.txt; then exit 1; fi
           tr -s '[:space:]' ' ' < main.txt | grep -qF 'This preprint has not been peer reviewed.'
           tr -s '[:space:]' ' ' < main.txt | grep -qF 'AI agents generated the proofs, code, and manuscript drafts under D. Rens'
           tr -s '[:space:]' ' ' < main.txt | grep -qF 'Separate AI agents performed the independent reviews.'
-          tr -s '[:space:]' ' ' < main.txt | grep -qF '0.1858777115'
-          tr -s '[:space:]' ' ' < main.txt | grep -qF '10.5281/zenodo.24407691'
-          tr -s '[:space:]' ' ' < main.txt | grep -qF '10.5281/zenodo.24407693'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'Davis Rens'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'SuperMatics Inc.'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '0000-0001-5839-5197'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '0.185755024'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '0.185877711'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '9/6820'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '10.5281/zenodo.24410276'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF '10.5281/zenodo.24410275'
           sha256sum main.pdf
           md5sum main.pdf
       - uses: actions/upload-artifact@v4

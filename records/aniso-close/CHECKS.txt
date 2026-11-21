@@ -1,0 +1,771 @@
+CURRENT REVISION 2 RESULT (supersedes historical receipt blocks below)
+RESERVE: 3189/10000; C_bound = sqrt(6811/5000)/(2*pi).
+FINAL BASES: replay.py EXIT 0; independent.py EXIT 0.
+GENUINE MUTANTS: ten per checker; all twenty EXIT 1 at mathematical guards.
+FINAL_VERIFIER_RUNNER_EXIT: 0; FINAL_CHECK_COMMAND_EXIT: 0.
+The old four overstated rejections are excluded, not counted a second time.
+The adjacent d=3190/10000 is UNRESOLVED after the bounded search timeout.
+Final source hashes and full command/stdout receipts are in the last revision-2 block.
+
+
+REVISION 2 TRUST BOUNDARY
+The entire revision-1 receipt/source block below is historical. The review
+accepted its two base certificates but rejected the claim that the old
+ratio-index and head-divisor runs were genuine mathematical tests: four of
+the twenty mutation rejections were overstated. Do not count those four.
+The corrected source, rational reserve search and final revision-2 receipts
+are appended in their own explicitly labeled blocks. Their final commands
+and hashes, not the historical expected outputs, define the current result.
+REVIEW.md is unchanged; all five original targets also exist as .v1 backups.
+
+===== HISTORICAL REVISION 1 (SUPERSEDED) =====
+
+ANISO-CLOSE verification receipts (2026-11-20)
+Scientific scope: exact arithmetic continuum reserve; analytic application remains PROOF DRAFT.
+Working directory: records/aniso-close
+No cloud/paid compute; one sequential heavy process. No builds, tests, lint or formatters.
+
+Reproduce all final verifier invocations in Git Bash:
+set +e;
+export TMP='<tmp>' TEMP='<tmp>' OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+mkdir -p '<tmp>'
+py='python'
+for script in replay.py independent.py; do
+  "$py" -B "$script"; rc=$?; printf 'BASE EXIT: %s EXPECTED: 0\n' "$rc"
+  for mutant in budget tail identity denominator cone coverage reserve strict head-divisor ratio-index; do
+    "$py" -B "$script" --mutant "$mutant"; rc=$?; printf 'MUTANT EXIT: %s EXPECTED: 1\n' "$rc"
+  done
+done
+
+The actual receipt runner below launches those 22 commands sequentially and fails
+if any observed exit differs from its expectation. Do not count argparse failures,
+timeouts or crashes as mutation rejections. Each rejection must be exit 1 with
+its mathematical guard in stdout/stderr.
+
+Actual runner invocation:
+set +e; export TMP='<tmp>' TEMP='<tmp>' OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1;
+'python' -B '<tmp>/checks.py'
+Expected runner exit: 0.
+
+===== TEMPORARY RUNNER SOURCE (checks.py) =====
+"""Sequential receipt collection. Temporary; removed after copying receipt text."""
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+root = Path('records/aniso-close')
+receipt = Path('<tmp>/receipt.txt')
+mutants = ('budget', 'tail', 'identity', 'denominator', 'cone', 'coverage', 'reserve', 'strict', 'head-divisor', 'ratio-index')
+wrong = []
+with receipt.open('w', encoding='utf-8', newline='\n') as log:
+    for script in ('replay.py', 'independent.py'):
+        for mutant in (None, *mutants):
+            args = [sys.executable, '-B', str(root/script)]
+            if mutant:
+                args += ['--mutant', mutant]
+            expected = 1 if mutant else 0
+            start = time.monotonic()
+            run = subprocess.run(args, text=True, capture_output=True, timeout=900)
+            text = f'COMMAND: {subprocess.list2cmdline(args)}\nEXIT: {run.returncode} EXPECTED: {expected} SECONDS: {time.monotonic()-start:.3f}\n'+run.stdout+run.stderr
+            print(text, end='', flush=True)
+            log.write(text)
+            log.flush()
+            if run.returncode != expected:
+                wrong.append((script, mutant, run.returncode))
+    log.write(f'UNEXPECTED: {wrong}\n')
+print('UNEXPECTED:', wrong)
+raise SystemExit(bool(wrong))
+
+===== END RUNNER SOURCE =====
+
+Endpoint/source evidence invocation:
+set +e; 'python' -B '<tmp>/endpoints.py'
+Observed EXIT: 0. The square-root endpoints use integer squares of rational bounds;
+the decimal decomposition is CALCULATED from stated historical numerical inputs,
+not an exact certificate of those inputs.
+
+===== TEMPORARY ENDPOINT SOURCE (endpoints.py) =====
+from fractions import Fraction as F
+from decimal import Decimal, localcontext
+from math import isqrt
+from hashlib import sha256
+from pathlib import Path
+
+
+def bracket(z, pairs):
+    low = sum(((-1 if j % 2 else 1)*z**(2*j+1)/(2*j+1) for j in range(2*pairs)), F(0))
+    return low, low+z**(4*pairs+1)/(4*pairs+1)
+
+
+al, ah = bracket(F(1, 5), 16)
+bl, bh = bracket(F(1, 239), 8)
+pl, ph = 16*al-4*bh, 16*ah-4*bl
+for name, d in (('C3', F(3181,10000)), ('Cstar', F(159,500))):
+    sqlo, sqhi = (1-d)/(2*ph*ph), (1-d)/(2*pl*pl)
+    scale = 10**16
+    lo = isqrt(sqlo.numerator*scale*scale//sqlo.denominator)
+    hi = isqrt(sqhi.numerator*scale*scale//sqhi.denominator)+1
+    assert F(lo,scale)**2 <= sqlo < sqhi <= F(hi,scale)**2
+    print(name, 'EXACT enclosure', F(lo,scale), F(hi,scale))
+with localcontext() as ctx:
+    ctx.prec = 50
+    pi = (Decimal(pl.numerator)/Decimal(pl.denominator)+Decimal(ph.numerator)/Decimal(ph.denominator))/2
+    ci = Decimal('0.18272624777232952')
+    di = 1-2*pi*pi*ci*ci
+    de, dt, old = Decimal('0.32144246'), Decimal('0.31894965'), Decimal('0.318')
+    c3 = ((1-Decimal('0.3181'))/2).sqrt()/pi
+    co = ((1-old)/2).sqrt()/pi
+    print('CALCULATED d_inf', di)
+    print('HISTORICAL gap shares %', 100*(di-de)/(di-old),100*(de-dt)/(di-old),100*(dt-old)/(di-old))
+    print('CALCULATED C3',c3)
+    print('CALCULATED Cstar',co)
+    print('CALCULATED relative improvement %',100*(1-c3/co))
+    print('CALCULATED C3 above Cinf %',100*(c3/ci-1))
+print('EXACT bare reporting gap',1-(1-F(3181,10000))/(1-F(159,500)))
+root = Path('records/aniso-close')
+for relative in ('replay.py','independent.py','search_adv.py','search_adv_full.log','probe_coupled_edge.py',
+                 '../ANISO-SHARP/RIGOR.md','../ANISO-SHARP-REVIEW/REVIEW.md','../SHARP/RIGOR.md','../SHARPFLAT4/RIGOR.md'):
+    source = (root/relative).read_bytes()
+    print('SOURCE_SHA256', relative, len(source), sha256(source).hexdigest())
+
+===== END ENDPOINT SOURCE =====
+
+===== OBSERVED ENDPOINT/SOURCE OUTPUT =====
+C3 EXACT enclosure 464660208935351/2500000000000000 371728167148281/2000000000000000
+Cstar EXACT enclosure 29043392417487/156250000000000 1858777114719169/10000000000000000
+CALCULATED d_inf 0.34092989393378979216240688081221022559323069801511
+HISTORICAL gap shares % 84.987021702149499105318295841849217478295708747505 10.871441478089711176098342157201493169980093966853 4.1415368197607897185833620009492893517241972856421
+CALCULATED C3 0.18586408357414044284218553101067872197290823336386
+CALCULATED Cstar 0.18587771147191687990944044767975404977017327531515
+CALCULATED relative improvement % 0.00733164706436361656228906579261573057242875329900
+CALCULATED C3 above Cinf % 1.7172332054454245258418019762001989844243461687300
+EXACT bare reporting gap 1/6820
+SOURCE_SHA256 replay.py 9277 28731c3511e2caae19e34ce88e537c0227c169766eb2bfd0a54eda89a40adf31
+SOURCE_SHA256 independent.py 9270 138ca112d0d138ea0c245c7dd419606229ab9762d9369cb6373f6829d94cc824
+SOURCE_SHA256 search_adv.py 10828 9855b02ad21efeae7a92ba9f235db4138b62cc34db6ce8300116c43933c30e5d
+SOURCE_SHA256 search_adv_full.log 767 35d95f6439026f66286b03d408c256c74ab8fa1d61b10d5c6928a934d68fcc93
+SOURCE_SHA256 probe_coupled_edge.py 7009 cdc743d898d0c2cdeb2bd7ff0108b082ceb4881c7c67dc913abea2e409448e9e
+SOURCE_SHA256 ../ANISO-SHARP/RIGOR.md 19402 c4762485b482beb1a44c95111ab3858f1abca8a5c36f5ffda265b2163afc59df
+SOURCE_SHA256 ../ANISO-SHARP-REVIEW/REVIEW.md 14572 d20ed213d5bfc301798586dc42f18462a1e90763dd837db3dfbea342ab62054d
+SOURCE_SHA256 ../SHARP/RIGOR.md 22025 4051a9539d493c3c5475e74f2258904383b75e9083e7e4bd4515334094b1ce6e
+SOURCE_SHA256 ../SHARPFLAT4/RIGOR.md 26915 50d3ee15e04d8abc9ed821b7a658dab8d5b21c89bf29af93589b1de4015fc8df
+
+Bounded route screen invocation:
+set +e; export TMP='<tmp>' TEMP='<tmp>' OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1;
+'python' -B '<tmp>/screen.py'
+Expected EXIT: 0. NUMERICAL only: finite normal solver with extrapolated tail,
+not an independently enclosed infinite normal branch. The profiler reads existing
+locals without changing script definitions, model state or returned values.
+A channel-uniform restriction is compared against the same matrix, not against a
+new physical branch. DOS finite differences rerun both normal and pairing terms.
+
+The temporary sources are included here for reproduction after cleanup. Copy the
+source blocks to the corresponding <tmp> filenames before running.
+
+===== TEMPORARY SCREEN SOURCE (screen.py) =====
+"""Bounded NUMERICAL screens; no certificate output and no edits to imported code."""
+import hashlib
+import json
+import math
+import runpy
+import sys
+from pathlib import Path
+from typing import Any
+import numpy as np
+from scipy.linalg import eigvalsh, eigh
+
+ROOT = Path('records/aniso-close')
+module = runpy.run_path(str(ROOT/'search_adv.py'))
+rng = np.random.default_rng(20261120)
+regimes = ['b0_923', 'soft_hard_nonpsd', 'notch_antipair', 'general']
+records = []
+best_negative: dict[str, Any] | None = None
+captured = {}
+
+
+def capture(frame, event, arg):
+    if event == 'return' and frame.f_code.co_name == 'eval_gain':
+        captured['A'] = frame.f_locals['A'].copy()
+        captured['widths'] = frame.f_locals['s'].copy()
+        captured['normal_residual'] = float(np.max(np.abs(frame.f_locals['Fs'])))
+
+
+for index in range(24):
+    d = 2 if index % 3 else 3
+    eta, tv, modes, cm = module['make_seed'](rng, d, 2, regimes[index % 4])
+    sys.setprofile(capture)
+    gain, rho = module['eval_gain'](eta, tv, modes, cm, N=48, Pc=32, ext=4)
+    sys.setprofile(None)
+    A = captured['A']
+    mass = np.sqrt(eta)[:, None]*sum(modes)*np.sqrt(eta)[None, :]
+    vals, vecs = eigh(mass)
+    v = np.abs(vecs[:, -1])
+    U = np.zeros((d*32, 32))
+    for channel in range(d):
+        U[channel*32:(channel+1)*32] = v[channel]*np.eye(32)
+    uniform = float(eigvalsh(U.T@A@U)[-1])
+    flat, _ = module['eval_gain'](eta, tv, modes, np.ones_like(cm), N=48, Pc=32, ext=4)
+    # Analytic integrands: derivative in width, not in a changed normal branch.
+    s = 2e6
+    nodes, weights = np.polynomial.legendre.leggauss(32)
+    gg, gp, gpp = 0., 0., 0.
+    for k, (lo, hi) in enumerate(zip(module['GRID'][:-1], module['GRID'][1:])):
+        energy = (lo+hi)/2+(hi-lo)/2*nodes
+        weight = weights*(hi-lo)/math.pi*cm[0, k]
+        den = energy*energy+s*s
+        gg += np.sum(weight/den)
+        gp += np.sum(weight*(-2*s)/den**2)
+        gpp += np.sum(weight*2*(3*s*s-energy*energy)/den**3)
+    sqrt_second = gpp/(2*math.sqrt(gg))-gp*gp/(4*gg**1.5)
+    # Change one admissible DOS bin in the complete matched normal solve.
+    for channel in range(d):
+        for k in (12, 13, 14, 15, 16):
+            h = 1e-3
+            center = float(cm[channel, k])
+            high, low = min(1., center+h), max(0., center-h)
+            plus, minus = cm.copy(), cm.copy()
+            plus[channel, k], minus[channel, k] = high, low
+            gplus, _ = module['eval_gain'](eta, tv, modes, plus, N=48, Pc=32, ext=4)
+            gminus, _ = module['eval_gain'](eta, tv, modes, minus, N=48, Pc=32, ext=4)
+            derivative = (gplus-gminus)/(high-low)
+            if best_negative is None or derivative < best_negative['derivative']:
+                best_negative = dict(index=index, channel=channel, bin=k, derivative=derivative,
+                    eta=eta.tolist(), t=tv.tolist(), M=[m.tolist() for m in modes], C=cm.tolist())
+    records.append(dict(index=index, channels=d, gain=gain, uniform_trial=uniform,
+        discarded_channel_gap=gain-uniform, flat_gain=flat,
+        g_second=float(gpp), sqrt_g_second=float(sqrt_second),
+        normal_residual=captured['normal_residual']))
+
+print('NUMERICAL screen, seed=20261120, 24 models, N=48, Pc=32, ext=4')
+print('gain_max', max(r['gain'] for r in records))
+print('largest uniform-trial underestimation', max(r['discarded_channel_gap'] for r in records))
+print('convex g models', sum(r['g_second'] > 0 for r in records), '/24')
+print('convex sqrt(g) models', sum(r['sqrt_g_second'] > 0 for r in records), '/24')
+print('largest absolute final normal residual', max(r['normal_residual'] for r in records))
+print('flat_minus_original_min', min(r['flat_gain']-r['gain'] for r in records))
+print('MOST_NEGATIVE', json.dumps(best_negative, sort_keys=True))
+# Resolution/step checks of the found negative derivative, preserving this generated model.
+assert best_negative is not None
+b = best_negative
+for N, Pc, h in ((48, 32, 1e-3), (96, 64, 1e-3), (96, 64, 1e-4)):
+    cm = np.array(b['C']); eta = np.array(b['eta']); tv = np.array(b['t']); modes = [np.array(m) for m in b['M']]
+    x, k = b['channel'], b['bin']; center = cm[x,k]
+    hi, lo = min(1.,center+h), max(0.,center-h)
+    plus, minus = cm.copy(), cm.copy(); plus[x,k], minus[x,k] = hi, lo
+    gp, _ = module['eval_gain'](eta,tv,modes,plus,N=N,Pc=Pc,ext=4)
+    gm, _ = module['eval_gain'](eta,tv,modes,minus,N=N,Pc=Pc,ext=4)
+    print('DOS_DERIVATIVE', N, Pc, h, (gp-gm)/(hi-lo))
+print('RECORDS', json.dumps(records, sort_keys=True))
+print('source_sha256', hashlib.sha256((ROOT/'search_adv.py').read_bytes()).hexdigest())
+
+===== END SCREEN SOURCE =====
+
+Preliminary independent execution (before the final 22-command receipt runner):
+COMMAND: python -B records/aniso-close/independent.py
+EXIT: 0 EXPECTED: 0 WALL SECONDS: 173.52
+EXACT independent three-stage cover: d=3181/10000; leaves=331; depth=10; area=4/3; heads=43
+C_bound = sqrt(6819/5000)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+Checks intentionally NOT run: full historical search_adv.py and probe_coupled_edge.py;
+reviewed ANISO-SHARP/base inherited replays; scalar spectral endpoint; normal-branch
+existence/width-cone proofs; builds, pytest, lint and formatters. Their existing
+results are not falsely counted as new verification. The retained search log
+records 2400 MC and only four refined optimizer records, maximum 0.99999962318.
+No final source was changed while its final receipt runner was executing.
+
+===== FINAL VERIFIER RECEIPTS =====
+COMMAND: python -B records\aniso-close\replay.py
+EXIT: 0 EXPECTED: 0 SECONDS: 71.594
+EXACT primary three-stage cover: d=3181/10000; leaves=111; depth=18; area=1; heads=43
+C_bound = sqrt(6819/5000)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+COMMAND: python -B records\aniso-close\replay.py --mutant budget
+EXIT: 1 EXPECTED: 1 SECONDS: 0.781
+REJECT: disjoint bare budget
+COMMAND: python -B records\aniso-close\replay.py --mutant tail
+EXIT: 1 EXPECTED: 1 SECONDS: 0.094
+REJECT: infinite reflected tail enclosure
+COMMAND: python -B records\aniso-close\replay.py --mutant identity
+EXIT: 1 EXPECTED: 1 SECONDS: 0.094
+REJECT: difference-of-squares identity
+COMMAND: python -B records\aniso-close\replay.py --mutant denominator
+EXIT: 1 EXPECTED: 1 SECONDS: 0.078
+REJECT: generic completion denominator
+COMMAND: python -B records\aniso-close\replay.py --mutant cone
+EXIT: 1 EXPECTED: 1 SECONDS: 0.094
+REJECT: valid Poisson tangent
+COMMAND: python -B records\aniso-close\replay.py --mutant coverage
+EXIT: 1 EXPECTED: 1 SECONDS: 70.578
+REJECT: complete closed-rectangle cover
+COMMAND: python -B records\aniso-close\replay.py --mutant reserve
+EXIT: 1 EXPECTED: 1 SECONDS: 21.703
+REJECT: unresolved compact box
+COMMAND: python -B records\aniso-close\replay.py --mutant strict
+EXIT: 1 EXPECTED: 1 SECONDS: 0.078
+REJECT: strict reporting margin
+COMMAND: python -B records\aniso-close\replay.py --mutant head-divisor
+EXIT: 1 EXPECTED: 1 SECONDS: 0.703
+REJECT: stage-0 divisor must be b0
+COMMAND: python -B records\aniso-close\replay.py --mutant ratio-index
+EXIT: 1 EXPECTED: 1 SECONDS: 0.641
+REJECT: stage gain uses its own frequency ratio
+COMMAND: python -B records\aniso-close\independent.py
+EXIT: 0 EXPECTED: 0 SECONDS: 139.937
+EXACT independent three-stage cover: d=3181/10000; leaves=331; depth=10; area=4/3; heads=43
+C_bound = sqrt(6819/5000)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+COMMAND: python -B records\aniso-close\independent.py --mutant budget
+EXIT: 1 EXPECTED: 1 SECONDS: 0.875
+REJECT: disjoint stage allocations
+COMMAND: python -B records\aniso-close\independent.py --mutant tail
+EXIT: 1 EXPECTED: 1 SECONDS: 0.078
+REJECT: positive infinite remainder
+COMMAND: python -B records\aniso-close\independent.py --mutant identity
+EXIT: 1 EXPECTED: 1 SECONDS: 0.063
+REJECT: new-stage factor four
+COMMAND: python -B records\aniso-close\independent.py --mutant denominator
+EXIT: 1 EXPECTED: 1 SECONDS: 0.078
+REJECT: expanded Schur complement
+COMMAND: python -B records\aniso-close\independent.py --mutant cone
+EXIT: 1 EXPECTED: 1 SECONDS: 0.094
+REJECT: outward tangent intercept
+COMMAND: python -B records\aniso-close\independent.py --mutant coverage
+EXIT: 1 EXPECTED: 1 SECONDS: 119.703
+REJECT: full residual rectangle volume
+COMMAND: python -B records\aniso-close\independent.py --mutant reserve
+EXIT: 1 EXPECTED: 1 SECONDS: 55.375
+REJECT: independent unresolved quadtree cell
+COMMAND: python -B records\aniso-close\independent.py --mutant strict
+EXIT: 1 EXPECTED: 1 SECONDS: 0.078
+REJECT: strict onset reporting gap
+COMMAND: python -B records\aniso-close\independent.py --mutant head-divisor
+EXIT: 1 EXPECTED: 1 SECONDS: 0.766
+REJECT: stage-0 available coefficient divided by head
+COMMAND: python -B records\aniso-close\independent.py --mutant ratio-index
+EXIT: 1 EXPECTED: 1 SECONDS: 0.906
+REJECT: gain frequency ratio identity
+UNEXPECTED: []
+CHECK_RUNNER_EXIT: 0
+
+===== OBSERVED ROUTE SCREEN OUTPUT =====
+NUMERICAL screen, seed=20261120, 24 models, N=48, Pc=32, ext=4
+gain_max 0.9999372823416597
+largest uniform-trial underestimation 0.5102134749644756
+convex g models 24 /24
+convex sqrt(g) models 24 /24
+largest absolute final normal residual 6.5281113847959205e-12
+flat_minus_original_min 2.818777329249844e-05
+MOST_NEGATIVE {"C": [[0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0], [0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0]], "M": [[[2.570677556481066, 0.8894231544705209], [0.8894231544705209, 0.22554955360983442]], [[1.7551339184791344, 1.1869760709242259], [1.1869760709242259, 0.05382612580352609]]], "bin": 12, "channel": 1, "derivative": -0.001211419115354494, "eta": [1.0, 0.5634180293641633], "index": 14, "t": [0.0378153015223521, 6.21551095243652]}
+DOS_DERIVATIVE 48 32 0.001 -0.001211419115354494
+DOS_DERIVATIVE 96 64 0.001 -0.001211400867617839
+DOS_DERIVATIVE 96 64 0.0001 -0.001211354798691522
+RECORDS [{"channels": 3, "discarded_channel_gap": 0.04621545202989785, "flat_gain": 0.9984148146752676, "g_second": 1.432394487812734e-24, "gain": 0.9193407682292389, "index": 0, "normal_residual": 4.4586556668946287e-13, "sqrt_g_second": 4.886025118985225e-19, "uniform_trial": 0.8731253161993411}, {"channels": 2, "discarded_channel_gap": 0.5007205297752455, "flat_gain": 0.999996720282281, "g_second": 1.8838336785138126e-19, "gain": 0.9996805462794023, "index": 1, "normal_residual": 6.5281113847959205e-12, "sqrt_g_second": 1.6187494773484113e-16, "uniform_trial": 0.49896001650415683}, {"channels": 2, "discarded_channel_gap": 0.0010216074920813556, "flat_gain": 0.9973424125005249, "g_second": 1.883734914913959e-19, "gain": 0.9934269192739525, "index": 2, "normal_residual": 2.220446049250313e-13, "sqrt_g_second": 1.6186996886929774e-16, "uniform_trial": 0.9924053117818712}, {"channels": 3, "discarded_channel_gap": 0.04288868004623603, "flat_gain": 0.9496979844964022, "g_second": 1.8753113044843505e-19, "gain": 0.8553355209973457, "index": 3, "normal_residual": 8.37108160567368e-14, "sqrt_g_second": 1.6148097598798785e-16, "uniform_trial": 0.8124468409511096}, {"channels": 2, "discarded_channel_gap": 1.4481982926306536e-05, "flat_gain": 0.9999910632474569, "g_second": 2.626056560928008e-24, "gain": 0.9975173180308287, "index": 4, "normal_residual": 5.1514348342607263e-14, "sqrt_g_second": 6.615709285301407e-19, "uniform_trial": 0.9975028360479024}, {"channels": 2, "discarded_channel_gap": 0.021789748446845003, "flat_gain": 0.9972006874631617, "g_second": 1.7904931097835427e-25, "gain": 0.9202546902170167, "index": 5, "normal_residual": 8.881784197001252e-16, "sqrt_g_second": 1.7274707473564344e-19, "uniform_trial": 0.8984649417701717}, {"channels": 3, "discarded_channel_gap": 0.009110163770625568, "flat_gain": 0.9005038663371532, "g_second": 1.8837637537896379e-19, "gain": 0.7704558685951165, "index": 6, "normal_residual": 8.031353360138382e-13, "sqrt_g_second": 1.618714227080447e-16, "uniform_trial": 0.7613457048244909}, {"channels": 2, "discarded_channel_gap": 0.017403274248664613, "flat_gain": 0.9999852645798313, "g_second": 5.556080348026607e-20, "gain": 0.9998996010228078, "index": 7, "normal_residual": 1.7763568394002505e-15, "sqrt_g_second": 8.790472222412412e-17, "uniform_trial": 0.9824963267741432}, {"channels": 2, "discarded_channel_gap": 0.021965982812154783, "flat_gain": 0.9999992747277813, "g_second": 3.8197186339338634e-24, "gain": 0.998940234189098, "index": 8, "normal_residual": 7.016609515630989e-14, "sqrt_g_second": 7.978845607518006e-19, "uniform_trial": 0.9769742513769433}, {"channels": 3, "discarded_channel_gap": 0.0007145364894757256, "flat_gain": 0.9995750018333763, "g_second": 1.8838336785138126e-19, "gain": 0.9995468140600838, "index": 9, "normal_residual": 1.687538997430238e-13, "sqrt_g_second": 1.6187494773484113e-16, "uniform_trial": 0.9988322775706081}, {"channels": 2, "discarded_channel_gap": 0.012744839195100721, "flat_gain": 0.9932122615168364, "g_second": 1.8797492586655175e-19, "gain": 0.9824405792513796, "index": 10, "normal_residual": 4.270361841918202e-12, "sqrt_g_second": 1.6166892455609744e-16, "uniform_trial": 0.9696957400562789}, {"channels": 2, "discarded_channel_gap": 0.0002720540609143507, "flat_gain": 0.9821772016167736, "g_second": 1.6774241515209438e-19, "gain": 0.8300316184391808, "index": 11, "normal_residual": 8.01581023779363e-14, "sqrt_g_second": 1.5274015540417711e-16, "uniform_trial": 0.8297595643782665}, {"channels": 3, "discarded_channel_gap": 0.00015756742813999303, "flat_gain": 0.9760384010940322, "g_second": 2.626056560928008e-24, "gain": 0.9752961506080249, "index": 12, "normal_residual": 8.666400930223972e-13, "sqrt_g_second": 6.615709285301407e-19, "uniform_trial": 0.9751385831798849}, {"channels": 2, "discarded_channel_gap": 0.027042708807288207, "flat_gain": 0.9999791604220076, "g_second": 2.1485917317399244e-25, "gain": 0.9193766251100595, "index": 13, "normal_residual": 1.7763568394002505e-15, "sqrt_g_second": 1.8923493915145947e-19, "uniform_trial": 0.8923339163027713}, {"channels": 2, "discarded_channel_gap": 0.00023305985300670073, "flat_gain": 0.9556709157713517, "g_second": 1.883162912066301e-19, "gain": 0.908318683786449, "index": 14, "normal_residual": 3.108624468950438e-14, "sqrt_g_second": 1.618411302711343e-16, "uniform_trial": 0.9080856239334423}, {"channels": 3, "discarded_channel_gap": 0.05260001221890698, "flat_gain": 0.9999090409320897, "g_second": 1.2071474576404247e-19, "gain": 0.9973376537088089, "index": 15, "normal_residual": 1.091571277811454e-12, "sqrt_g_second": 1.2959155352981696e-16, "uniform_trial": 0.9447376414899019}, {"channels": 2, "discarded_channel_gap": 0.026473370537507535, "flat_gain": 0.9999316050655013, "g_second": 5.968310365935713e-25, "gain": 0.9767986201211648, "index": 16, "normal_residual": 3.7267966490617255e-12, "sqrt_g_second": 3.1539156525202717e-19, "uniform_trial": 0.9503252495836573}, {"channels": 2, "discarded_channel_gap": 0.3706699151932725, "flat_gain": 0.999757336300495, "g_second": 1.9743170690174534e-24, "gain": 0.904493423660535, "index": 17, "normal_residual": 8.881784197001252e-16, "sqrt_g_second": 5.736312795090947e-19, "uniform_trial": 0.5338235084672625}, {"channels": 3, "discarded_channel_gap": 0.011079529336961047, "flat_gain": 0.5705082446982216, "g_second": 1.8837994204123146e-19, "gain": 0.2981040743459244, "index": 18, "normal_residual": 6.52811138479592e-14, "sqrt_g_second": 1.618732207334217e-16, "uniform_trial": 0.28702454500896335}, {"channels": 2, "discarded_channel_gap": 8.462882678306194e-05, "flat_gain": 0.9999984895705631, "g_second": 1.2494471210879197e-19, "gain": 0.9999372823416597, "index": 19, "normal_residual": 7.105427357601002e-15, "sqrt_g_second": 1.3182369721595487e-16, "uniform_trial": 0.9998526535148766}, {"channels": 2, "discarded_channel_gap": 0.1064693434013152, "flat_gain": 0.9998009928413925, "g_second": 9.549296585471279e-25, "gain": 0.9398304850960906, "index": 20, "normal_residual": 4.444444812179427e-12, "sqrt_g_second": 3.989422803998369e-19, "uniform_trial": 0.8333611416947754}, {"channels": 3, "discarded_channel_gap": 0.5102134749644756, "flat_gain": 0.9992888254312008, "g_second": 1.1936620731886348e-25, "gain": 0.931847095399696, "index": 21, "normal_residual": 1.4885870314174099e-12, "sqrt_g_second": 1.4104739588687734e-19, "uniform_trial": 0.4216336204352204}, {"channels": 2, "discarded_channel_gap": 0.009407134335710943, "flat_gain": 0.9996839167591739, "g_second": 4.736445801266231e-22, "gain": 0.9882591027647735, "index": 22, "normal_residual": 1.971756091734278e-13, "sqrt_g_second": 8.88485749008997e-18, "uniform_trial": 0.9788519684290625}, {"channels": 2, "discarded_channel_gap": 0.15780556988838534, "flat_gain": 0.9992355319301668, "g_second": 1.3829046799321582e-19, "gain": 0.9986501401896323, "index": 23, "normal_residual": 8.881784197001252e-16, "sqrt_g_second": 1.387008978673995e-16, "uniform_trial": 0.8408445703012469}]
+source_sha256 9855b02ad21efeae7a92ba9f235db4138b62cc34db6ce8300116c43933c30e5d
+SCREEN_EXIT: 0
+
+===== COMPLETED TEMPORARY CLEANUP =====
+COMMAND (Git Bash): set +e; rm -rf '<tmp>'; rc=$?; printf 'CLEANUP_EXIT: %s\n' "$rc"; if [ -e '<tmp>' ]; then printf 'TEMP_ABSENCE_EXIT: 1\n'; exit 1; else printf 'TEMP_ABSENCE_EXIT: 0\n'; exit "$rc"; fi
+CLEANUP_EXIT: 0 EXPECTED: 0
+TEMP_ABSENCE_EXIT: 0 EXPECTED: 0
+Temporary sources and outputs are absent. Their full source, full numerical records,
+base/mutant receipts and source hashes have been preserved above.
+HISTORICAL FINAL: both revision-1 bases exited 0; twenty mutant commands
+exited 1, but only sixteen are genuine mathematical rejections per REVIEW.md.
+The old receipt runner, route screen and endpoint calculator exited 0.
+
+===== REVISION 2: INITIAL EXACT GRID BISECTION =====
+Depth caps at this stage: primary 22, independent 12. These caps were subsequently increased because rejected neighboring grid points still passed their zero-width center predicates. A depth rejection is not an exact reserve upper bound.
+COMMAND (Git Bash): set +e; python -B <tmp>/bisect.py
+BISECTION_RUNNER_EXIT: 0 EXPECTED: 0
+===== TEMPORARY BISECTION SOURCE =====
+from pathlib import Path
+from fractions import Fraction
+import subprocess
+import sys
+import time
+from hashlib import sha256
+
+root = Path('records/aniso-close')
+receipt = Path('<tmp>/bisect.txt')
+with receipt.open('w', encoding='utf-8') as log:
+    for name in ('replay.py', 'independent.py'):
+        log.write(f'SOURCE_SHA256: {name} {sha256((root/name).read_bytes()).hexdigest()}\n')
+    def trial(n):
+        outcomes = []
+        for name in ('replay.py', 'independent.py'):
+            cmd = [sys.executable, '-B', str(root/name), '--reserve', f'{n}/10000']
+            start = time.perf_counter()
+            result = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=600)
+            seconds = time.perf_counter()-start
+            log.write('COMMAND: '+subprocess.list2cmdline(cmd)+'\n')
+            log.write(f'EXIT: {result.returncode} SECONDS: {seconds:.3f}\n'+result.stdout+'\n')
+            log.flush()
+            print(f'TRIAL: {n}/10000 {name} EXIT: {result.returncode} SECONDS: {seconds:.3f}', flush=True)
+            print(result.stdout, flush=True)
+            if result.returncode not in (0, 1):
+                raise RuntimeError('Unexpected verifier exit')
+            outcomes.append(result.returncode == 0)
+        return all(outcomes)
+    lower, upper = 3182, 3215
+    if not trial(lower):
+        raise RuntimeError('Reviewed feasible starting reserve failed')
+    if trial(upper):
+        raise RuntimeError('Search interval upper endpoint unexpectedly feasible')
+    while upper-lower > 1:
+        middle = (lower+upper)//2
+        if trial(middle):
+            lower = middle
+        else:
+            upper = middle
+    log.write(f'BEST_GRID_RESERVE: {lower}/10000\nNEXT_GRID_RESERVE_REJECTED: {upper}/10000\n')
+    log.flush()
+    print(f'BEST_GRID_RESERVE: {lower}/10000; NEXT_GRID_RESERVE_REJECTED: {upper}/10000', flush=True)
+
+===== OBSERVED BISECTION RECEIPTS =====
+SOURCE_SHA256: replay.py 07581f22d9b5e19ac55a6ec8d2cad78fc08103b07d161ebc3e5826843a369cad
+SOURCE_SHA256: independent.py 725a4d58959892934a7b1776e1a9716949a001df1928a804b568b9ea90a22f3d
+COMMAND: python -B records\aniso-close\replay.py --reserve 3182/10000
+EXIT: 0 SECONDS: 80.525
+EXACT primary three-stage cover: d=1591/5000; leaves=117; depth=18; area=1; heads=43
+C_bound = sqrt(3409/2500)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3182/10000
+EXIT: 0 SECONDS: 169.650
+EXACT independent three-stage cover: d=1591/5000; leaves=358; depth=10; area=4/3; heads=43
+C_bound = sqrt(3409/2500)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\replay.py --reserve 3215/10000
+EXIT: 1 SECONDS: 55.748
+LIMIT: r=4597/4096; t=1/4096; point_predicate=True
+REJECT: unresolved compact box
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3215/10000
+EXIT: 1 SECONDS: 81.895
+LIMIT: r=3445/3072; t=1/16384; point_predicate=True
+REJECT: independent unresolved quadtree cell
+
+COMMAND: python -B records\aniso-close\replay.py --reserve 3198/10000
+EXIT: 1 SECONDS: 76.517
+LIMIT: r=4409/4096; t=1/4096; point_predicate=True
+REJECT: unresolved compact box
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3198/10000
+EXIT: 1 SECONDS: 71.828
+LIMIT: r=3301/3072; t=1/16384; point_predicate=True
+REJECT: independent unresolved quadtree cell
+
+COMMAND: python -B records\aniso-close\replay.py --reserve 3190/10000
+EXIT: 1 SECONDS: 86.220
+LIMIT: r=4249/4096; t=1/4096; point_predicate=True
+REJECT: unresolved compact box
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3190/10000
+EXIT: 1 SECONDS: 100.879
+LIMIT: r=3173/3072; t=1/16384; point_predicate=True
+REJECT: independent unresolved quadtree cell
+
+COMMAND: python -B records\aniso-close\replay.py --reserve 3186/10000
+EXIT: 0 SECONDS: 86.502
+EXACT primary three-stage cover: d=1593/5000; leaves=170; depth=20; area=1; heads=43
+C_bound = sqrt(3407/2500)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3186/10000
+EXIT: 0 SECONDS: 206.466
+EXACT independent three-stage cover: d=1593/5000; leaves=496; depth=11; area=4/3; heads=43
+C_bound = sqrt(3407/2500)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\replay.py --reserve 3188/10000
+EXIT: 0 SECONDS: 131.182
+EXACT primary three-stage cover: d=797/2500; leaves=247; depth=22; area=1; heads=43
+C_bound = sqrt(1703/1250)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3188/10000
+EXIT: 0 SECONDS: 343.997
+EXACT independent three-stage cover: d=797/2500; leaves=709; depth=12; area=4/3; heads=43
+C_bound = sqrt(1703/1250)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\replay.py --reserve 3189/10000
+EXIT: 1 SECONDS: 106.039
+LIMIT: r=4203/4096; t=1/4096; point_predicate=True
+REJECT: unresolved compact box
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3189/10000
+EXIT: 1 SECONDS: 143.591
+LIMIT: r=3127/3072; t=1/16384; point_predicate=True
+REJECT: independent unresolved quadtree cell
+
+BEST_GRID_RESERVE: 3188/10000
+NEXT_GRID_RESERVE_REJECTED: 3189/10000
+
+
+===== REVISION 2: BOUNDED DEEPER SEARCH =====
+Primary/independent depth caps: 30/16. Additional search budget: 1,200 seconds. Both d=3189/10000 commands exited 0. The next primary command timed out; the next independent command was not started. These are UNRESOLVED, not mathematical rejections.
+COMMAND (Git Bash): set +e; export TMP=<tmp> TEMP=<tmp> OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1; python -B <tmp>/bisect2.py
+DEEPER_SEARCH_EXIT: 0 EXPECTED: 0
+===== TEMPORARY DEEPER SEARCH SOURCE =====
+from pathlib import Path
+import subprocess
+import sys
+import time
+from hashlib import sha256
+
+root = Path('records/aniso-close')
+deadline = time.perf_counter()+1200
+best = 3188
+with Path('<tmp>/bisect2.txt').open('w', encoding='utf-8') as log:
+    for name in ('replay.py', 'independent.py'):
+        log.write(f'SOURCE_SHA256: {name} {sha256((root/name).read_bytes()).hexdigest()}\n')
+    for candidate in range(3189, 3216):
+        passed = []
+        for name in ('replay.py', 'independent.py'):
+            remaining = deadline-time.perf_counter()
+            if remaining < 1:
+                log.write(f'UNRESOLVED_TIME_BUDGET: {candidate}/10000 {name}\n')
+                passed.append(False)
+                continue
+            cmd = [sys.executable, '-B', str(root/name), '--reserve', f'{candidate}/10000']
+            started = time.perf_counter()
+            try:
+                run = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=remaining)
+                text = 'COMMAND: '+subprocess.list2cmdline(cmd)+f'\nEXIT: {run.returncode} SECONDS: {time.perf_counter()-started:.3f}\n'+run.stdout+'\n'
+                if run.returncode not in (0, 1):
+                    raise RuntimeError('Unexpected verifier exit')
+                passed.append(run.returncode == 0)
+            except subprocess.TimeoutExpired as error:
+                partial = error.stdout or ''
+                if isinstance(partial, bytes):
+                    partial = partial.decode('utf-8', errors='replace')
+                text = 'COMMAND: '+subprocess.list2cmdline(cmd)+f'\nTIMEOUT: {time.perf_counter()-started:.3f} seconds; NOT a mathematical rejection\n'+partial+'\n'
+                passed.append(False)
+            log.write(text)
+            log.flush()
+            print(text, flush=True)
+        if not all(passed):
+            log.write(f'NEXT_GRID_NOT_CERTIFIED: {candidate}/10000\n')
+            break
+        best = candidate
+    log.write(f'BEST_VERIFIED_GRID_RESERVE: {best}/10000\nSEARCH_RUNNER_EXIT: 0\n')
+    print(f'BEST_VERIFIED_GRID_RESERVE: {best}/10000; SEARCH_RUNNER_EXIT: 0', flush=True)
+
+===== OBSERVED DEEPER SEARCH RECEIPTS =====
+SOURCE_SHA256: replay.py bf22e3abb98b331bc6da4a4eeea43a0e008c37a93588bb6f07f1560fd607bd92
+SOURCE_SHA256: independent.py a20e4225fe2439e328a30110dbbf918ed5610a5538177dbb878322ccc9847728
+COMMAND: python -B records\aniso-close\replay.py --reserve 3189/10000
+EXIT: 0 SECONDS: 204.600
+EXACT primary three-stage cover: d=3189/10000; leaves=367; depth=24; area=1; heads=43
+C_bound = sqrt(6811/5000)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\independent.py --reserve 3189/10000
+EXIT: 0 SECONDS: 427.296
+EXACT independent three-stage cover: d=3189/10000; leaves=1036; depth=13; area=4/3; heads=43
+C_bound = sqrt(6811/5000)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\replay.py --reserve 3190/10000
+TIMEOUT: 568.119 seconds; NOT a mathematical rejection
+
+UNRESOLVED_TIME_BUDGET: 3190/10000 independent.py
+NEXT_GRID_NOT_CERTIFIED: 3190/10000
+BEST_VERIFIED_GRID_RESERVE: 3189/10000
+SEARCH_RUNNER_EXIT: 0
+
+===== REVISION 2: EXACT OUTWARD ENDPOINTS =====
+COMMAND (Git Bash): set +e; export TMP=<tmp> TEMP=<tmp> OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1; python -B <tmp>/endpoints.py 3189/10000
+ENDPOINT_COMMAND_EXIT: 0 EXPECTED: 0
+===== TEMPORARY ENDPOINT SOURCE =====
+from fractions import Fraction as F
+from math import isqrt
+from pathlib import Path
+import sys
+
+
+def atan_small(x, terms):
+    total = sum(((-1)**k*x**(2*k+1)/F(2*k+1) for k in range(terms)), F(0))
+    following = (-1)**terms*x**(2*terms+1)/F(2*terms+1)
+    return min(total, total+following), max(total, total+following)
+
+
+def sqrt_floor(x, scale):
+    return F(isqrt(x.numerator*scale*scale//x.denominator), scale)
+
+
+a, b = atan_small(F(1, 5), 192)
+c, e = atan_small(F(1, 239), 64)
+pi_lower, pi_upper = 16*a-4*e, 16*b-4*c
+reserve = F(sys.argv[1])
+scale = 10**16
+endpoints = []
+for name, numerator in (('C_new', 2*(1-reserve)), ('C_star', F(341, 250))):
+    lower = sqrt_floor(numerator/(4*pi_upper*pi_upper), scale)
+    upper = sqrt_floor(numerator/(4*pi_lower*pi_lower), scale)+F(1, scale)
+    assert lower*lower <= numerator/(4*pi_upper*pi_upper)
+    assert upper*upper >= numerator/(4*pi_lower*pi_lower)
+    endpoints.append((lower, upper))
+    print(f'{name}: {lower} <= C <= {upper}; decimal [{float(lower):.16f}, {float(upper):.16f}]')
+new_lower, new_upper = endpoints[0]
+star_lower, star_upper = endpoints[1]
+improvement_lower = 100*(1-new_upper/star_lower)
+improvement_upper = 100*(1-new_lower/star_upper)
+cinf = F('0.18272624777232952')
+print(f'RESERVE: {reserve}; SQUARED_NUMERATOR: {2*(1-reserve)}')
+print(f'IMPROVEMENT_PERCENT_INTERVAL: [{improvement_lower}, {improvement_upper}]')
+print(f'CALCULATED_IMPROVEMENT_PERCENT: {float((improvement_lower+improvement_upper)/2):.10f}')
+print(f'CALCULATED_ABOVE_DISPLAYED_CINF_PERCENT: {float(100*((new_lower+new_upper)/2/cinf-1)):.10f}')
+print(f'EXACT_BARE_GAP_AT_CSTAR: {(reserve-F(159, 500))/(1-F(159, 500))}')
+ext = 1-reserve-F(33, 500)
+for name, value in (('r_far', F(9, 17)-F(7, 75)/ext), ('r_near', F(2, 5)+F(3, 4)*(ext/8-F(1, 9))/ext), ('t_large', F(1, 3)+F(4, 9)*(ext/6-F(1, 9))/ext)):
+    assert value > reserve
+    print(f'EXACT_EXTERIOR: {name} {value}; calculated {float(value):.12f} > {reserve}')
+print('ENDPOINT_CALCULATOR_EXIT: 0')
+
+===== OBSERVED ENDPOINT RECEIPTS =====
+C_new: 928775121993991/5000000000000000 <= C <= 1857550243987983/10000000000000000; decimal [0.1857550243987982, 0.1857550243987983]
+C_star: 29043392417487/156250000000000 <= C <= 1858777114719169/10000000000000000; decimal [0.1858777114719168, 0.1858777114719169]
+RESERVE: 3189/10000; SQUARED_NUMERATOR: 6811/5000
+IMPROVEMENT_PERCENT_INTERVAL: [10223922759875/154898092893264, 122687073118700/1858777114719169]
+CALCULATED_IMPROVEMENT_PERCENT: 0.0660041875
+CALCULATED_ABOVE_DISPLAYED_CINF_PERCENT: 1.6575487449
+EXACT_BARE_GAP_AT_CSTAR: 9/6820
+EXACT_EXTERIOR: r_far 118477/313701; calculated 0.377674919748 > 3189/10000
+EXACT_EXTERIOR: r_near 1057787/2952480; calculated 0.358270674145 > 3189/10000
+EXACT_EXTERIOR: t_large 162983/498231; calculated 0.327123362456 > 3189/10000
+ENDPOINT_CALCULATOR_EXIT: 0
+
+
+===== REVISION 2: FINAL SOURCES AND GENUINE MUTANT RECEIPTS =====
+These are the current final default-reserve sources. No checker source edit followed this run. Every base must exit 0; each named mutant must exit 1 and print its mathematical rejection. No argparse failure, exception, timeout or crash is counted as a successful mutant.
+COMMAND (Git Bash): set +e; export TMP=<tmp> TEMP=<tmp> OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1; python -B <tmp>/checks.py
+FINAL_CHECK_COMMAND_EXIT: 0 EXPECTED: 0
+===== TEMPORARY FINAL RUNNER SOURCE =====
+from pathlib import Path
+import subprocess
+import sys
+import time
+from hashlib import sha256
+
+root = Path('records/aniso-close')
+mutants = ('budget', 'tail', 'identity', 'denominator', 'cone', 'coverage', 'reserve', 'strict', 'head-divisor', 'ratio-index')
+with Path('<tmp>/receipt.txt').open('w', encoding='utf-8') as log:
+    for name in ('replay.py', 'independent.py'):
+        log.write(f'SOURCE_SHA256: {name} {sha256((root/name).read_bytes()).hexdigest()}\n')
+    for name in ('replay.py', 'independent.py'):
+        for mutant in (None, *mutants):
+            cmd = [sys.executable, '-B', str(root/name)]
+            if mutant:
+                cmd += ['--mutant', mutant]
+            start = time.perf_counter()
+            result = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=900)
+            expected = 1 if mutant else 0
+            text = 'COMMAND: '+subprocess.list2cmdline(cmd)+f'\nEXIT: {result.returncode} EXPECTED: {expected} SECONDS: {time.perf_counter()-start:.3f}\n'+result.stdout+'\n'
+            log.write(text)
+            log.flush()
+            print(text, flush=True)
+            if result.returncode != expected or (mutant and 'REJECT:' not in result.stdout):
+                raise RuntimeError('Unexpected verifier outcome; crashes and parsing errors are not rejections')
+    log.write('FINAL_VERIFIER_RUNNER_EXIT: 0\n')
+    print('FINAL_VERIFIER_RUNNER_EXIT: 0', flush=True)
+
+===== OBSERVED FINAL RECEIPTS =====
+SOURCE_SHA256: replay.py f8bfc2e5bc9dfc719f701b9ec5845f9e7cc9388d18d2440f1d5bf69c5edd8ef2
+SOURCE_SHA256: independent.py cb5e64827a843895643ea59dbee19577e42fb04bf8544084d5a51acce20d6142
+COMMAND: python -B records\aniso-close\replay.py
+EXIT: 0 EXPECTED: 0 SECONDS: 185.449
+EXACT primary three-stage cover: d=3189/10000; leaves=367; depth=24; area=1; heads=43
+C_bound = sqrt(6811/5000)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\replay.py --mutant budget
+EXIT: 1 EXPECTED: 1 SECONDS: 0.615
+REJECT: disjoint bare budget
+
+COMMAND: python -B records\aniso-close\replay.py --mutant tail
+EXIT: 1 EXPECTED: 1 SECONDS: 0.563
+REJECT: infinite reflected tail enclosure
+
+COMMAND: python -B records\aniso-close\replay.py --mutant identity
+EXIT: 1 EXPECTED: 1 SECONDS: 0.079
+REJECT: difference-of-squares identity
+
+COMMAND: python -B records\aniso-close\replay.py --mutant denominator
+EXIT: 1 EXPECTED: 1 SECONDS: 0.107
+REJECT: generic completion denominator
+
+COMMAND: python -B records\aniso-close\replay.py --mutant cone
+EXIT: 1 EXPECTED: 1 SECONDS: 0.074
+REJECT: valid Poisson tangent
+
+COMMAND: python -B records\aniso-close\replay.py --mutant coverage
+EXIT: 1 EXPECTED: 1 SECONDS: 176.111
+REJECT: complete closed-rectangle cover
+
+COMMAND: python -B records\aniso-close\replay.py --mutant reserve
+EXIT: 1 EXPECTED: 1 SECONDS: 22.872
+LIMIT: r=189265/65536; t=4097/65536; point_predicate=True; edge_point_predicate=False
+REJECT: unresolved compact box
+
+COMMAND: python -B records\aniso-close\replay.py --mutant strict
+EXIT: 1 EXPECTED: 1 SECONDS: 0.066
+REJECT: strict reporting margin
+
+COMMAND: python -B records\aniso-close\replay.py --mutant head-divisor
+EXIT: 1 EXPECTED: 1 SECONDS: 0.675
+REJECT: unassisted head reference
+
+COMMAND: python -B records\aniso-close\replay.py --mutant ratio-index
+EXIT: 1 EXPECTED: 1 SECONDS: 0.688
+REJECT: per-frequency head reference
+
+COMMAND: python -B records\aniso-close\independent.py
+EXIT: 0 EXPECTED: 0 SECONDS: 409.231
+EXACT independent three-stage cover: d=3189/10000; leaves=1036; depth=13; area=4/3; heads=43
+C_bound = sqrt(6811/5000)/(2*pi); C_report = sqrt(341/250)/(2*pi)
+
+COMMAND: python -B records\aniso-close\independent.py --mutant budget
+EXIT: 1 EXPECTED: 1 SECONDS: 0.665
+REJECT: disjoint stage allocations
+
+COMMAND: python -B records\aniso-close\independent.py --mutant tail
+EXIT: 1 EXPECTED: 1 SECONDS: 0.074
+REJECT: positive infinite remainder
+
+COMMAND: python -B records\aniso-close\independent.py --mutant identity
+EXIT: 1 EXPECTED: 1 SECONDS: 0.069
+REJECT: new-stage factor four
+
+COMMAND: python -B records\aniso-close\independent.py --mutant denominator
+EXIT: 1 EXPECTED: 1 SECONDS: 0.122
+REJECT: expanded Schur complement
+
+COMMAND: python -B records\aniso-close\independent.py --mutant cone
+EXIT: 1 EXPECTED: 1 SECONDS: 0.073
+REJECT: outward tangent intercept
+
+COMMAND: python -B records\aniso-close\independent.py --mutant coverage
+EXIT: 1 EXPECTED: 1 SECONDS: 345.286
+REJECT: full residual rectangle volume
+
+COMMAND: python -B records\aniso-close\independent.py --mutant reserve
+EXIT: 1 EXPECTED: 1 SECONDS: 65.675
+LIMIT: r=105647/49152; t=65537/262144; point_predicate=True; edge_point_predicate=False
+REJECT: independent unresolved quadtree cell
+
+COMMAND: python -B records\aniso-close\independent.py --mutant strict
+EXIT: 1 EXPECTED: 1 SECONDS: 0.067
+REJECT: strict onset reporting gap
+
+COMMAND: python -B records\aniso-close\independent.py --mutant head-divisor
+EXIT: 1 EXPECTED: 1 SECONDS: 0.616
+REJECT: independent head remainder reference
+
+COMMAND: python -B records\aniso-close\independent.py --mutant ratio-index
+EXIT: 1 EXPECTED: 1 SECONDS: 0.547
+REJECT: independent frequency reference
+
+FINAL_VERIFIER_RUNNER_EXIT: 0
+
+FINAL: two bases exited 0; all twenty genuinely mutated arithmetic/certificate cases exited 1 at their mathematical guards; the final runner exited 0.
+
+
+===== REVISION 2: COMPLETED TEMPORARY CLEANUP =====
+COMMAND (Git Bash): set +e; rm -rf '<tmp>'; rc=$?; printf 'CLEANUP_EXIT: %s EXPECTED: 0\n' "$rc"; if [ -e '<tmp>' ]; then printf 'TEMP_ABSENCE_EXIT: 1 EXPECTED: 0\n'; exit 1; else printf 'TEMP_ABSENCE_EXIT: 0 EXPECTED: 0\n'; fi; exit "$rc"
+CLEANUP_EXIT: 0 EXPECTED: 0
+TEMP_ABSENCE_EXIT: 0 EXPECTED: 0
+All temporary sources and receipts above were preserved before deletion.
+

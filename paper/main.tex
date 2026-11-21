@@ -20,26 +20,27 @@
 \hyphenation{Zenodo}
 \def\UrlBreaks{\do\/}
 \def\UrlBigBreaks{}
-\newcommand*{\PAPERDOI}{10.5281/zenodo.24407691}
-\newcommand*{\SUPPLEMENTDOI}{10.5281/zenodo.24407693}
+\newcommand*{\PAPERDOI}{10.5281/zenodo.24410276}
+\newcommand*{\SUPPLEMENTDOI}{10.5281/zenodo.24410275}
 \newcommand{\kB}{k_{\mathrm B}}
 \newcommand{\Tlin}{T_{\mathrm{lin}}}
 \newcommand{\Cinf}{C_\infty}
 \newcommand{\Ccent}{C_{\mathrm{cent}}}
 \newcommand{\Ccaus}{C_{\mathrm{caus}}}
 \newcommand{\Cstar}{C_{*}}
+\newcommand{\Cthree}{C_{3}}
 \newcommand{\Crep}{C_{\mathrm{rep}}}
-\newcommand{\dstar}{d_{*}}
+\newcommand{\dthree}{d_{3}}
 \newcommand{\drep}{d_{\mathrm{rep}}}
 \newcommand{\reff}{r_{\mathrm{eff}}}
 
 \hypersetup{
-  pdftitle={Centered multichannel Eliashberg branches: a sqrt(341/250)/(2 pi) moment-norm ceiling},
+  pdftitle={Centered multichannel Eliashberg branches: a strict sqrt(341/250)/(2 pi) moment-norm ceiling},
   pdfauthor={Davis Rens},
   pdfsubject={An upper bound on the linear Eliashberg onset temperature of a centered multichannel model},
   pdfkeywords={linearised Eliashberg theory, onset temperature, upper bound, computer-assisted proof}
 }
-\title{Centered multichannel Eliashberg branches:\\ a $\sqrt{341/250}/(2\pi)$ moment-norm ceiling}
+\title{Centered multichannel Eliashberg branches:\\ a strict $\sqrt{341/250}/(2\pi)$ moment-norm ceiling}
 \author{Davis Rens\\SuperMatics Inc.\\\href{https://orcid.org/0000-0001-5839-5197}{ORCID 0000-0001-5839-5197}}
 \date{November 2026}
 
@@ -47,7 +48,7 @@
 \maketitle
 
 \begin{abstract}
-We prove an upper bound on the linear onset temperature of a reciprocal multichannel Eliashberg model whose channels carry different bounded, energy-dependent, even densities of states and a common retarded glue. The bound reads $\kB\Tlin<C\sqrt{\rho}$, where $\rho$ is the norm of the glue moment matrix, and the constant is $C=\Cstar=\sqrt{341/250}/(2\pi)\approx0.1858777115$ for the supremum over the class and $C=\Crep=\sqrt{6821/5000}/(2\pi)\approx0.1858913384$ as a strict bound for every model of the class. Both numbers lie between the exact scalar constant $\Cinf\approx0.1827262478$ and the constants $\sqrt{683/500}/(2\pi)\approx0.1860139355$ and $\sqrt{41/30}/(2\pi)\approx0.1860593214$ of the preceding preprint, and both are certified by exact rational arithmetic. The relative excess over $\Cinf$ falls from $1.82\%$ to $1.73\%$, and the new constant sits $0.25\%$ above the floor $0.185411$ that the same edge-reserve method cannot go below. The gain comes from a reserve raised from $317/1000$ to $159/500$, a finer partition of the head weights, and a minimisation over the exact rational tangent envelope in the inverse head weight. The finite part of the argument is a covering of a compact rectangle in two variables by closed rational rectangles, carried out twice by independent programs with $159$ and $466$ leaves and guarded by twelve deliberately corrupted runs. The result is an upper bound on a linear model onset temperature. It is not an exact transition temperature and it is not a measurement. The question whether the supremum over the class equals $\Cinf$ remains open.
+We prove an upper bound on the linear onset temperature of a reciprocal multichannel Eliashberg model whose channels carry different bounded, energy-dependent, even densities of states and a common retarded glue. The bound reads $k_BT_{\mathrm{lin}}<C\sqrt\rho$, where $\rho$ is the norm of the glue moment matrix. For the supremum over the class the constant is $\Cthree=\sqrt{6811/5000}/(2\pi)\approx0.1857550244$, and for every single model of the class the strict statement is $k_BT_{\mathrm{lin}}<\Cstar\sqrt\rho$ with $\Cstar=\sqrt{341/250}/(2\pi)\approx0.1858777115$, the exact slack at the reported temperature being the rational $9/6820$. Both numbers lie between the exact scalar constant $\Cinf\approx0.1827262478$ and the constants $\sqrt{683/500}/(2\pi)\approx0.1860139355$ and $\sqrt{41/30}/(2\pi)\approx0.1860593214$ of the preceding preprint, and both are certified by exact rational arithmetic. The supremum constant sits $0.066\%$ below the constant of the first version of this preprint and $1.66\%$ above $\Cinf$, and it sits $0.19\%$ above the floor $0.185411$ that the same edge-reserve method cannot go below. The gain comes from a reserve raised from $159/500$ to $3189/10000$, a three-stage cascade in which the two first tail modes are completed against all higher tail modes before they meet the head, and a minimisation over the exact rational tangent envelope in the inverse head weight at all pairwise crossings. The finite part of the argument is a covering of a compact rectangle in two variables by closed rational rectangles, carried out twice by independent programs with $367$ and $1036$ leaves and guarded by ten deliberately corrupted runs each. The next grid point of the reserve, $3190/10000$, is left unresolved. The result is an upper bound on a linear model onset temperature. It is not an exact transition temperature and it is not a measurement. The question whether the supremum over the class equals $\Cinf$ remains open.
 \end{abstract}
 
 \section{Introduction}
@@ -58,19 +59,21 @@ For a single channel the ceiling is settled. For an arbitrary bounded energy-dep
 
 Three earlier preprints gave constants for this coupled problem, for nested classes of the same model and by the same edge-reserve method. The first~\cite{predecessor} obtained $U=\sqrt{6466219/3576050}/(2\pi)\approx0.2140146706$ on centered branches. The second~\cite{optimum} lowered this to $C_1=\sqrt{413/250}/(2\pi)\approx0.2045620904$ by an additive first-frequency comparison, and then to $C_{21}=\sqrt{377/250}/(2\pi)\approx0.1954433070$ by retaining twenty tail frequencies; both hold on the wider causal class of Section~\ref{sec:setting}, which contains the centered one. The third~\cite{finiteenergy} reached $\sqrt{41/30}/(2\pi)\approx0.1860593214$ on centered branches and $\sqrt{45/32}/(2\pi)\approx0.1887345454$ on a wider class of causal branches defined by Harnack inequalities alone, which is $1.82\%$ and $3.29\%$ above $\Cinf$.
 
-The present paper improves the centered constant of~\cite{finiteenergy}, and only that one. We prove
+The present paper supersedes the first version of this preprint. It improves both constants of that version and leaves every constant of the other earlier preprints untouched. We prove
 \[
-S_{\mathrm{cent}}\ \le\ \Cstar=\frac{\sqrt{341/250}}{2\pi}\approx0.1858777115,
+S_{\mathrm{cent}}\ \le\ \Cthree=\frac{\sqrt{6811/5000}}{2\pi}\approx0.1857550244,
 \qquad
-\kB\Tlin\ <\ \Crep\sqrt{\rho},\quad \Crep=\frac{\sqrt{6821/5000}}{2\pi}\approx0.1858913384,
+\kB\Tlin\ <\ \Cstar\sqrt{\rho},\quad \Cstar=\frac{\sqrt{341/250}}{2\pi}\approx0.1858777115,
 \]
-where $S_{\mathrm{cent}}$ is the supremum of $\kB\Tlin/\sqrt{\rho}$ over the whole centered class at all finite glue energies. The first is a bound on a supremum and is not strict. The second is strict for every model of the class, and it is the statement one would quote. The relative excess over $\Cinf$ falls from $1.82\%$ to $1.73\%$, so the gain is $0.09\%$; it is small and we do not disguise that. What makes it worth recording is that it is obtained where the method is close to its own ceiling, so the remaining gap to $\Cinf$ is mostly a gap the method cannot cross.
+where $S_{\mathrm{cent}}$ is the supremum of $\kB\Tlin/\sqrt{\rho}$ over the whole centered class at all finite glue energies. The first is a bound on a supremum and is not strict. The second is strict for every model of the class, and it is the statement one would quote; at $\tau=\Cstar\sqrt{\rho}$ the bare gap of the form equals the rational $9/6820$. The relative excess over $\Cinf$ falls from $1.80\%$ of~\cite{finiteenergy} and $1.72\%$ of the first version to $1.66\%$ for the supremum, and from $1.82\%$ and $1.73\%$ to $1.72\%$ for the strict statement. The gain over the first version is $0.07\%$ and it is small, and we do not disguise that. What makes it worth recording is that it is obtained where the method is close to its own ceiling, so the remaining gap to $\Cinf$ is mostly a gap the method cannot cross.
 
-Three changes produce the gain. The reserve $d$, the fraction of the quadratic form each coordinate keeps unconditionally, rises from $317/1000$ to $159/500$, one part in a thousand, and the infinite-tail budget, both cascade stages, the head estimate and the three exterior regions were recomputed and re-certified at the new value. Second, the two head weights are partitioned into forty-three consecutive intervals of a single weight instead of a nine-by-nine grid of pairs. Third, the lower envelope of the centered weights is minimised over the exact convex piecewise-affine envelope in the inverse head weight instead of being evaluated at its worst point, and the programs verify rationally that the breakpoints are ordered.
+Four changes produce the gain. First, the reserve $d$, the fraction of the quadratic form each coordinate keeps unconditionally, rises from $159/500$ to $3189/10000$, and the infinite-tail budget, the cascade, the head estimate and the three exterior regions were recomputed and re-certified at the new value. Second, the cascade itself is deeper. The two first tail modes are now completed against the higher tail modes in two stages before they meet the head, where the first stage pairs each higher tail mode with the first tail mode and the second stage pairs it with the second; every gain is delivered to the head completion of its own frequency, with the head weight as the only divisor, and no gain is reused. A single exact identity, $S_{mk}^2-p_{mk}^2=4p_{mk}/(w_mw_k)$, expresses the first two stages and the head completion alike, so one monotonicity statement carries the whole cascade. Third, the covering is deeper: the primary tree needs $367$ leaves at depth $24$ and the independent tree $1036$ leaves at depth $13$, against $159$ and $466$ in the first version. Fourth, the strict statement is now read at the supremum constant itself. Since $\Cthree<\Cstar$, the bare slack at $\tau=\Cstar\sqrt\rho$ is the rational $9/6820$, and no second, larger constant has to be introduced to carry the strict bound.
 
-The last change has a limit that we state at once. The edge-reserve argument of~\cite{finiteenergy} is subject to a floor: an inequality for one edge, valid for every weight sequence of the centered class at every energy and imbalance, cannot produce a constant below $0.185411$. That floor is a statement about the method, not a lower bound for $S_{\mathrm{cent}}$. The constant proved here, $0.1858777115$, lies above it by $0.25\%$, and the floor sits at the fraction $0.852$ of the interval $[\Cinf,\Cstar]$, so the paper closes most of what the method can close.
+The method has a limit that we state at once. The edge-reserve argument of~\cite{finiteenergy} is subject to a floor: an inequality for one edge, valid for every weight sequence of the centered class at every energy and imbalance, cannot produce a constant below $0.185411$. That floor is a statement about the method, not a lower bound for $S_{\mathrm{cent}}$, and a proof that tied the weights to the masses would not be subject to it. The constant proved here, $0.1857550244$, lies above the floor by $0.19\%$, and the floor sits at the fraction $0.886$ of the interval $[\Cinf,\Cthree]$ measured from $\Cinf$: at most the upper $0.114$ of that interval is still reachable by a sharper version of the same edge inequality.
 
-Whether $S_{\mathrm{cent}}$ equals $\Cinf$ or lies strictly above it is not settled by any of this, and we do not conjecture an answer. What the paper does settle is the comparison at the level of constants: $\Cinf<\Cstar<\Crep<\sqrt{683/500}/(2\pi)<\sqrt{41/30}/(2\pi)<\Ccaus<C_{21}<C_1<U$, a chain of strict inequalities between explicit numbers.
+Whether $S_{\mathrm{cent}}$ equals $\Cinf$ or lies strictly above it is not settled by any of this, and we do not conjecture an answer. What the paper does settle is the comparison at the level of constants: $\Cinf<\Cthree<\Cstar<\sqrt{683/500}/(2\pi)<\sqrt{41/30}/(2\pi)<\Ccaus<C_{21}<C_1<U$, a chain of strict inequalities between explicit numbers.
+
+\emph{Version 2 note.} This version supersedes the first version of this preprint and leaves both of its statements intact as weaker bounds. The reserve moves from $159/500$ to $3189/10000$, so the supremum bound moves from $\sqrt{341/250}/(2\pi)$ to $\Cthree=\sqrt{6811/5000}/(2\pi)$, a reduction of $0.066\%$, and the strict bound of the first version, $\Crep=\sqrt{6821/5000}/(2\pi)\approx0.1858913384$, is replaced by the strict bound at $\sqrt{341/250}/(2\pi)$ with slack $9/6820$. The cascade gains a second completion stage, the head criterion is evaluated at all pairwise crossings of the envelope lines, and the head intervals are verified to cover the head weight exactly once. The two coverings grow from $159$ and $466$ leaves to $367$ and $1036$ at depth caps $30$ and $16$, and the guarded runs from six per program to ten; four of the earlier rejected runs corrupted a guard rather than a production quantity, so they were replaced by runs that corrupt a production quantity and are not counted a second time. The analytic substance of Sections~\ref{sec:reduction} and~\ref{sec:weights} does not change. The next grid point of the reserve, $3190/10000$, exhausted the search budget and is unresolved, not rejected, and the answer to the question of Section~\ref{sec:compare} is unchanged.
 
 Section~\ref{sec:setting} fixes the model, the branch class and the notion of onset, and states the theorem. Section~\ref{sec:reduction} reduces it to one pair of channels at one energy by a positive-resolvent argument that also explains why the glue moment matrix need not be positive semidefinite. Section~\ref{sec:weights} proves the centered envelope and Section~\ref{sec:proof} the edge inequality case by case. Section~\ref{sec:cert} describes the finite certificate and its limits. Section~\ref{sec:compare} places the constants in a table and states the open question. Section~\ref{sec:repro} explains how to replay everything.
 
@@ -128,28 +131,30 @@ The onset $\Tlin$ is the supremum of the temperatures at which $Q$ fails to be p
 \begin{theorem}\label{thm:main}
 In the centered class above, with $\rho$ the norm of the glue moment matrix,
 \[
-S_{\mathrm{cent}}:=\sup\frac{\kB\Tlin}{\sqrt{\rho}}\ \le\ \Cstar=\frac{\sqrt{341/250}}{2\pi},
+S_{\mathrm{cent}}:=\sup\frac{\kB\Tlin}{\sqrt{\rho}}\ \le\ \Cthree=\frac{\sqrt{6811/5000}}{2\pi},
 \]
 the supremum being over all models of the class with finitely many channels, all finite positive glue energies, and all admissible centered branches; and for every such model
 \[
-\kB\Tlin\ <\ \Crep\sqrt{\rho},\qquad \Crep=\frac{\sqrt{6821/5000}}{2\pi}.
+\kB\Tlin\ <\ \Cstar\sqrt{\rho},\qquad \Cstar=\frac{\sqrt{341/250}}{2\pi}.
 \]
 The two constants satisfy the exact rational decimal enclosures
 \[
-0.185877711471916<\Cstar<0.185877711471917,\qquad
-0.185891338370617<\Crep<0.185891338370618 .
+0.1857550243987982<\Cthree<0.1857550243987983,\qquad
+0.1858777114719168<\Cstar<0.1858777114719169 .
 \]
 \end{theorem}
 
-The two constants carry the two reserves $\dstar=159/500=0.318$ and $\drep=3179/10000=0.3179$, through $2(1-\dstar)=341/250$ and $2(1-\drep)=6821/5000$. The strict bound is not a by-product of a limit. It follows from $S_{\mathrm{cent}}\le\Cstar$ with $\Cstar<\Crep$, and at $\tau=\Crep\sqrt\rho$ the bare gap of the form equals
+The two constants carry the two reserves $\dthree=3189/10000=0.3189$ and $\drep=159/500=0.318$, through $2(1-\dthree)=6811/5000$ and $2(1-\drep)=341/250$. The strict bound is not a by-product of a limit. It follows from $S_{\mathrm{cent}}\le\Cthree$ with $\Cthree<\Cstar$, and at $\tau=\Cstar\sqrt\rho$ the bare gap of the form equals
 \begin{equation}\label{eq:baregap}
-1-\frac{1-\dstar}{1-\drep}=\frac1{6821}>0 ,
+1-\frac{1-\dthree}{1-\drep}=\frac{9}{6820}>0 ,
 \end{equation}
 so that temperature is itself stable by a rational margin. The strict inequality at each model is thus a rational statement about that model, and it does not require any assertion that stability at one temperature forces stability in a neighbourhood of it. No monotonicity of the onset in temperature is used anywhere.
 
 \begin{remark}\label{rem:notsharp}
-Neither constant is claimed exact. The exact scalar constant is $\Cinf\approx0.1827262478$ and $\Cinf\le S_{\mathrm{cent}}$ holds because the scalar case is a member of the class and its supremum over the class is exactly $\Cinf\sqrt\rho$; see~\cite{finite,predecessor}. Thus $\Cinf\le S_{\mathrm{cent}}\le\Cstar$ with $\Cstar/\Cinf-1=1.725\%$. Whether the lower end or a point strictly above it is correct is open; Section~\ref{sec:compare} states what is and is not known.
+Neither constant is claimed exact. The exact scalar constant is $\Cinf\approx0.1827262478$ and $\Cinf\le S_{\mathrm{cent}}$ holds because the scalar case is a member of the class and its supremum over the class is exactly $\Cinf\sqrt\rho$; see~\cite{finite,predecessor}. Thus $\Cinf\le S_{\mathrm{cent}}\le\Cthree$ with $\Cthree/\Cinf-1=1.658\%$. Whether the lower end or a point strictly above it is correct is open; Section~\ref{sec:compare} states what is and is not known.
 \end{remark}
+
+We attach four labels to the statements below. \emph{Proved} means a human-reviewed analytic argument combined with exact rational arithmetic that a machine has certified and that an independent program reproduces; nothing here is formalised. \emph{Certified} means the finite exact-arithmetic statement on its own, apart from the analysis that applies it. \emph{Numerical} means floating-point evidence with no enclosure. \emph{Open} means undecided. Theorem~\ref{thm:main} and Proposition~\ref{prop:edge} are proved in this sense, the reserve of Proposition~\ref{prop:edge} is additionally certified, the scan of Section~\ref{sec:compare} is numerical, and the equality $S_{\mathrm{cent}}=\Cinf$ is open.
 
 \section{Reduction to an edge inequality}\label{sec:reduction}
 
@@ -159,39 +164,39 @@ B_r=\sum_{n\ge0}w_n\bigl(r^{-1}b_nX_n^2+r\,c_nY_n^2\bigr)=r^{-1}\|g_x\|^2+r\|g_y
 \]
 
 \begin{proposition}[edge inequality]\label{prop:edge}
-With $\dstar=159/500$, for every $t>0$, every $r>0$, all centered-admissible weight sequences $(b_n)$ and $(c_m)$, and all real finitely supported $X,Y$,
+With $\dthree=3189/10000$, for every $t>0$, every $r>0$, all centered-admissible weight sequences $(b_n)$ and $(c_m)$, and all real finitely supported $X,Y$,
 \begin{equation}\label{eq:edge}
-B_r+\tfrac12 I_{xy}(t)\ \ge\ \dstar\,B_r .
+B_r+\tfrac12 I_{xy}(t)\ \ge\ \dthree\,B_r .
 \end{equation}
 \end{proposition}
 
-The two weight sequences are independent, so the diagonal case $x=y$ is included, and the constant $\dstar$ carries no dependence on $t$, on $r$ or on the weights.
+The two weight sequences are independent, so the diagonal case $x=y$ is included, and the constant $\dthree$ carries no dependence on $t$, on $r$ or on the weights.
 
 \begin{proof}[Proof of Theorem~\ref{thm:main} from Proposition~\ref{prop:edge}]
 Choose $R'>\rho$ and put $h=(I-\mathcal M/R')^{-1}\mathbf 1=\sum_{j\ge0}(\mathcal M/R')^j\mathbf 1$. Every entry of $\mathcal M$ is nonnegative and $\mathbf 1>0$, so $h>0$ entrywise and $\mathcal Mh=R'(h-\mathbf 1)\le R'h$ entrywise; no positivity of the quadratic form of $\mathcal M$ is used. Apply \eqref{eq:edge} with $r=r_{xy}=h_x/h_y$ for every ordered pair and integrate against $d\mathfrak m_{xy}$. Then
 \[
-Q(v)\ \ge\ \sum_x\eta_x\|g_x\|^2-\frac{1-\dstar}{(2\pi\tau)^2}\sum_{x,y}\eta_x\eta_y\mathcal M_{xy}\Bigl(\frac{h_y}{h_x}\|g_x\|^2+\frac{h_x}{h_y}\|g_y\|^2\Bigr).
+Q(v)\ \ge\ \sum_x\eta_x\|g_x\|^2-\frac{1-\dthree}{(2\pi\tau)^2}\sum_{x,y}\eta_x\eta_y\mathcal M_{xy}\Bigl(\frac{h_y}{h_x}\|g_x\|^2+\frac{h_x}{h_y}\|g_y\|^2\Bigr).
 \]
 By reciprocity $\mathcal M_{xy}=\mathcal M_{yx}$ the two terms in the bracket give the same double sum, and $\sum_y\mathcal M_{xy}\eta_yh_y\le R'h_x$ bounds it by $R'\sum_x\eta_x\|g_x\|^2$. Hence
 \begin{equation}\label{eq:gap}
-Q(v)\ \ge\ \Bigl[1-\frac{2(1-\dstar)R'}{(2\pi\tau)^2}\Bigr]\sum_x\eta_x\|g_x\|^2 ,
+Q(v)\ \ge\ \Bigl[1-\frac{2(1-\dthree)R'}{(2\pi\tau)^2}\Bigr]\sum_x\eta_x\|g_x\|^2 ,
 \end{equation}
 and the left side does not depend on $R'$, so we may let $R'\downarrow\rho$.
 
-Now fix $\tau>\Cstar\sqrt\rho$, so that $(2\pi\tau)^2>2(1-\dstar)\rho$, and put $\beta(\tau)=1-2(1-\dstar)\rho/(2\pi\tau)^2>0$. Letting $R'\downarrow\rho$ in \eqref{eq:gap} gives $Q(v)\ge\beta(\tau)\sum_x\eta_x\|g_x\|^2$ for every $v$. The normal widths obey $s_{n,x}\le w_n+R(\tau)\le(1+R(\tau))w_n$ at this temperature, since every frequency row of the normal kernel is bounded by $R(\tau)$, so the Hilbert norm of the pairing problem, $\sum_x\eta_x\|(s_xb_x)^{1/2}v_x\|^2$, is at most $(1+R(\tau))$ times $\sum_x\eta_x\|g_x\|^2$. Therefore
+Now fix $\tau>\Cthree\sqrt\rho$, so that $(2\pi\tau)^2>2(1-\dthree)\rho$, and put $\beta(\tau)=1-2(1-\dthree)\rho/(2\pi\tau)^2>0$. Letting $R'\downarrow\rho$ in \eqref{eq:gap} gives $Q(v)\ge\beta(\tau)\sum_x\eta_x\|g_x\|^2$ for every $v$. The normal widths obey $s_{n,x}\le w_n+R(\tau)\le(1+R(\tau))w_n$ at this temperature, since every frequency row of the normal kernel is bounded by $R(\tau)$, so the Hilbert norm of the pairing problem, $\sum_x\eta_x\|(s_xb_x)^{1/2}v_x\|^2$, is at most $(1+R(\tau))$ times $\sum_x\eta_x\|g_x\|^2$. Therefore
 \[
 Q(v)\ \ge\ \frac{\beta(\tau)}{1+R(\tau)}\sum_x\eta_x\|(s_xb_x)^{1/2}v_x\|^2
 \]
-for every $v$, and $Q$ is strictly positive definite at $\tau$. No $\tau>\Cstar\sqrt\rho$ is a failure temperature, so $\kB\Tlin\le\Cstar\sqrt\rho$; disconnected instability sets are included, since the argument is applied at each $\tau$ and not along a branch.
+for every $v$, and $Q$ is strictly positive definite at $\tau$. No $\tau>\Cthree\sqrt\rho$ is a failure temperature, so $\kB\Tlin\le\Cthree\sqrt\rho$; disconnected instability sets are included, since the argument is applied at each $\tau$ and not along a branch.
 
-For the strict statement, take $\tau\ge\Crep\sqrt\rho$ with $(2\pi\tau)^2\ge2(1-\drep)\rho$. Then the bracket in \eqref{eq:gap} is at least $1-(1-\dstar)R'/((1-\drep)\rho)$, and letting $R'\downarrow\rho$ gives
+For the strict statement, take $\tau\ge\Cstar\sqrt\rho$ with $(2\pi\tau)^2\ge2(1-\drep)\rho$. Then the bracket in \eqref{eq:gap} is at least $1-(1-\dthree)R'/((1-\drep)\rho)$, and letting $R'\downarrow\rho$ gives
 \[
-Q(v)\ \ge\ \frac1{6821}\sum_x\eta_x\|g_x\|^2 .
+Q(v)\ \ge\ \frac{9}{6820}\sum_x\eta_x\|g_x\|^2 .
 \]
-The bare gap at the reported temperature is positive and its stability operator is bounded below by $[6821(1+R(\tau))]^{-1}>0$, so that temperature is itself stable, and $\Cstar<\Crep$ turns $\kB\Tlin\le\Cstar\sqrt\rho$ into the strict statement $\kB\Tlin<\Crep\sqrt\rho$ quoted in the theorem. Both constants are functions of the raw reserves through $2(1-d)$ and of the reported deficit through the displayed ratio, and the identity \eqref{eq:baregap} is a rational identity.
+The bare gap at the reported temperature is positive and its stability operator is bounded below by $[6820(1+R(\tau))]^{-1}>0$, so that temperature is itself stable, and $\Cthree<\Cstar$ turns $\kB\Tlin\le\Cthree\sqrt\rho$ into the strict statement $\kB\Tlin<\Cstar\sqrt\rho$ quoted in the theorem. Both constants are functions of the raw reserves through $2(1-d)$ and of the reported deficit through the displayed ratio, and the identity \eqref{eq:baregap} is a rational identity.
 \end{proof}
 
-All the work therefore lies in Proposition~\ref{prop:edge}. Note that the previous preprint used $\dstar=317/1000$, which gives $2(1-\dstar)=683/500$; the single number that changes is the reserve.
+All the work therefore lies in Proposition~\ref{prop:edge}. The first version of this preprint used the reserve $159/500$, which gives $2(1-\drep)=341/250$ and the constant $\Cstar$, and $\Cstar$ now carries the strict statement; the preprint before that used $d=317/1000$, which gives $683/500$. What changes between the three is the reserve, the decomposition of the cascade that delivers it, and nothing in the reduction above.
 
 \section{The centered weight envelope}\label{sec:weights}
 
@@ -242,23 +247,24 @@ The intercepts \eqref{eq:tangent} are irrational. The rational numbers used are 
 
 \section{Proof of the edge inequality}\label{sec:proof}
 
-\subsection{Coordinates and four disjoint sectors}
+\subsection{Coordinates and five disjoint sectors}
 
 Fix $t>0$, $r>0$ and two admissible weight sequences $b_n$ and $c_m$. Put
 \[
 a_n=r^{-1/2}\sqrt{w_nb_n}\,X_n,\qquad z_m=r^{1/2}\sqrt{w_mc_m}\,Y_m,
 \]
-so that $B_r=\sum_{n\ge0}(a_n^2+z_n^2)$. If a weight vanishes the corresponding terms drop out, and the bare reserve $1\ge\dstar$ is untouched; zero-weight coordinates are removed by continuity. The part of $\tfrac12I_{xy}$ that couples frequency $n$ of the first channel with frequency $m$ of the second is
+so that $B_r=\sum_{n\ge0}(a_n^2+z_n^2)$. If a weight vanishes the corresponding terms drop out, and the bare reserve $1\ge\dthree$ is untouched; zero-weight coordinates are removed by continuity. The part of $\tfrac12I_{xy}$ that couples frequency $n$ of the first channel with frequency $m$ of the second is
 \begin{equation}\label{eq:block}
 \mathcal B_{nm}=\frac{r\,c_m\,p_{nm}}{2w_n}\,a_n^2+\frac{b_n\,p_{nm}}{2r\,w_m}\,z_m^2-S_{nm}\sqrt{\frac{b_nc_m}{w_nw_m}}\;a_nz_m .
 \end{equation}
-The unit terms $a_n^2$ and $z_n^2$ of $B_r$ are the mass we spend. Of each we keep back the fraction $\dstar$ demanded by \eqref{eq:edge}, and the remaining $1-\dstar$ is shared among the pairs in which the coordinate takes part.
+The unit terms $a_n^2$ and $z_n^2$ of $B_r$ are the mass we spend. Of each we keep back the fraction $\dthree$ demanded by \eqref{eq:edge}, and the remaining $1-\dthree$ is shared among the pairs in which the coordinate takes part.
 
-Fix $M=20$ and split the set of all frequency pairs into four parts, which are disjoint and cover it:
+Fix $M=20$ and split the set of all frequency pairs into five parts, which are disjoint and cover it:
 \begin{enumerate}
 \item the head pair $(0,0)$;
 \item the head-tail pairs $(0,m)$ and $(n,0)$ with $m,n\ge1$, called Stage~0;
 \item the pairs $(1,k)$ and $(k,1)$ with $2\le k\le M$, called Stage~1;
+\item the pairs $(2,k)$ and $(k,2)$ with $3\le k\le M$, called Stage~2;
 \item all remaining tail-tail pairs with $n,m\ge1$.
 \end{enumerate}
 Every tail-tail pair beyond the chosen ones is bounded below by its row cost, so no pair is left unaccounted.
@@ -275,13 +281,13 @@ with $a=k_{|n-m|}$ and $b=k_{n+m+1}$ writes the pair $(n,m)$ of \eqref{eq:form} 
 \]
 using $b_n,c_m\le1$ and $k_{n+m+1}\le(n+m+1)^{-2}$. The factor $2$ in the reflected term is what makes this step valid, and dropping it would invalidate the bound. Collecting the coefficient of $a_n^2$ over the remaining pairs gives, for $1\le n\le M$,
 \begin{equation}\label{eq:qred}
-q_n=\sum_{\substack{1\le m\le M\\(n,m)\notin\{(1,k),(k,1):\,2\le k\le M\}}}\frac1{w_m(n+m+1)^2}+\frac1{43(n+M+1)},
+q_n=\sum_{\substack{1\le m\le M\\(n,m)\notin\{(1,k),(k,1):\,2\le k\le M\}\\(n,m)\notin\{(2,k),(k,2):\,3\le k\le M\}}}\frac1{w_m(n+m+1)^2}+\frac1{43(n+M+1)},
 \end{equation}
 where the last term bounds the modes $m\ge M+1$, for which $w_m\ge43$ and
 \[
 \sum_{m\ge M+1}\frac1{(n+m+1)^2}\ \le\ \int_{M+1}^{\infty}\frac{dm}{(n+m)^2}=\frac1{n+M+1}.
 \]
-For $n>M$ no Stage-1 pair is removed, so the full row sum applies, and it is at most that of the first row: the terms decrease in $n$ and the tail term does too. Evaluating sixteen terms exactly and bounding the rest gives
+The extracted pairs are the ones the two completion stages pay for, and each of them is removed from both of its rows, so the surviving terms of the first two rows are few: $q_1=973/25542\approx0.03809$ and $q_2=1114/123625\approx0.00901$. No row keeps a stage pair, and the row cost without any extraction is largest for $n=1$, since both the terms and the tail decrease in $n$; evaluating sixteen terms exactly and bounding the rest gives
 \begin{equation}\label{eq:qcap}
 q_{\mathrm{full},n}\ \le\ \sum_{m=1}^{16}\frac1{w_m(m+2)^2}+\frac1{4\cdot16^2}\ <\ \frac{33}{500}.
 \end{equation}
@@ -289,44 +295,54 @@ These are rational infinite-tail bounds. They are not a truncation of the physic
 
 \subsection{The cascade}
 
-After the reserve and these costs, tail mode $n\le M$ has the share $\mathrm{rem}_n=1-\dstar-q_n$ of its bare mass left, and $\mathrm{rem}_1=1-159/500-973/25542\approx0.6439$. We give $\mathrm{rem}_1$ entirely to Stage~0 and split $\mathrm{rem}_k$ for $2\le k\le M$ in the proportion $7/10$ to Stage~0 and $3/10$ to Stage~1,
+After the reserve and these costs, tail mode $n\le M$ has the share $\mathrm{rem}_n=1-\dthree-q_n$ of its bare mass left, and $\mathrm{rem}_1=1-3189/10000-973/25542\approx0.64301$. We give $\mathrm{rem}_1$ entirely to Stage~0, split $\mathrm{rem}_2$ in the proportion $7/10$ to Stage~0 and $3/10$ to Stage~1, and split $\mathrm{rem}_k$ for $3\le k\le M$ in three,
 \[
-\alpha_{0,1}=\mathrm{rem}_1,\quad \beta_{1,1}=0;\qquad
-\alpha_{0,k}=\tfrac7{10}\mathrm{rem}_k,\quad \beta_{1,k}=\tfrac3{10}\mathrm{rem}_k\quad(2\le k\le M),
+\alpha_{0,1}=\mathrm{rem}_1,\quad \beta_{1,1}=\beta_{2,1}=0,\qquad
+\alpha_{0,2}=\tfrac7{10}\mathrm{rem}_2,\quad \beta_{1,2}=\tfrac3{10}\mathrm{rem}_2,\quad \beta_{2,2}=0,
 \]
-and $\alpha_{\rm ext}=1-\dstar-33/500=77/125$ for $n>M$. All remainders are positive, and in the range where Stage~1 is used one has $\beta_{1,k}>0.1984$.
+\[
+\alpha_{0,k}=\tfrac{13}{20}\mathrm{rem}_k,\quad \beta_{1,k}=\tfrac14\mathrm{rem}_k,\quad \beta_{2,k}=\tfrac1{10}\mathrm{rem}_k\quad(3\le k\le M),
+\]
+and $\alpha_{\rm ext}=1-\dthree-33/500=6151/10000$ for $n>M$. All remainders are positive and at least $0.6430$, every Stage-1 share is at least $0.1677$, and every Stage-2 share is at least $0.0671$.
 
-\emph{Stage 1.} For $n=1$ and $2\le k\le M$ the share is $\beta_{1,k}$, and $b_1$ drops out in the worst case $b_1=1$, because $b_1\mapsto b_1/(\beta+Cb_1)$ is increasing in $b_1$. Completing the square in $z_k$ against the coordinate $a_1$ leaves $c_kD_{1k}$ in $a_1^2$, with
-\begin{equation}\label{eq:D1}
-D_{1k}=\frac{r\,p_{1k}}6-\frac{S_{1k}^2}{12w_k\bigl(\beta_{1,k}+r^{-1}p_{1k}/(2w_k)\bigr)}
-=\frac{2p_{1k}\bigl(rw_k\beta_{1,k}-2/(3w_k)\bigr)}{12w_k\beta_{1,k}+6r^{-1}p_{1k}} ,
+\emph{The completion identity.} For $m<k$ write $w_m=2m+1$, $w_k=2k+1$, $p=p_{mk}$ and $S=S_{mk}$. Because $(k+m+1)^2-(k-m)^2=w_mw_k$, the exact identity
+\begin{equation}\label{eq:idm}
+S^2-p^2=\frac{4p}{w_mw_k}
 \end{equation}
-the second form following from the exact identity $S_{1k}^2-p_{1k}^2=4p_{1k}/(3w_k)$, which holds because $p_{1k}=k_{k-1}-k_{k+2}$ and $(k+2)^2-(k-1)^2=3w_k$. Its numerator is positive for $r\in[1/3,3]$ and $k\ge2$, so no sign case arises; on that range it increases in $r$ and in $p_{1k}$ and therefore decreases in $t$. The first tail mode of the first channel is thereby boosted to
-\[
-\alpha_{0,1}^{\rm eff}=\alpha_{0,1}+\sum_{k=2}^{M}c_kD_{1k},
-\]
-and the mirror statement holds for the first tail mode of the second channel, with $r$ replaced by $r^{-1}$ and $b$ by $c$: $D^{Y}_{1k}(r,t)=D_{1k}(r^{-1},t)$. This is the cascade. The first tail mode is stabilised by the higher tail modes before it meets the head, and the boost is what allows the reserve to exceed the value at which the single-stage completion of the first mode turns negative.
+holds for every pair. Completing the square in the coordinate $k$ of the opposite channel against the coordinate $m$ of its own channel, with available coefficient $A$, leaves the coefficient
+\begin{equation}\label{eq:Fmk}
+F_{mk}(r,t;A)=\frac{r\,p}{2w_m}-\frac{S^2}{4w_mw_k\bigl(A+r^{-1}p/(2w_k)\bigr)}
+=\frac{2p\bigl(rw_kA-2/(w_mw_k)\bigr)}{w_m\bigl(4w_kA+2r^{-1}p\bigr)}
+\end{equation}
+in the square of the coordinating coordinate. On the region where the numerator is positive, $F_{mk}$ increases in $r$, in $A$ and in $p$, since the last fraction has positive partial derivatives there, and $p$ decreases in $t$.
 
-\emph{Stage 0.} The bare share of the tail coordinate $z_m$ is $\alpha_m$, where $\alpha_1=\alpha_{0,1}^{\rm eff}$ for the second channel is the boosted value and $\alpha_m=\alpha_{0,m}$ for $2\le m\le M$. In the normalisation in which the share is measured against the head weight, this is $A_m=\alpha_m/b_0$, so completing the square in $z_m$ against the head coordinate $a_0$ leaves $c_mD_{0m}$ in $a_0^2$, where
+\emph{Stages 1 and 2.} For $m=1$ and $2\le k\le M$, and for $m=2$ and $3\le k\le M$, the share $\beta_{m,k}$ completes the higher tail mode $k$ of the opposite channel against the tail mode $m$ of its own channel. Both programs bound the gain with the weights of the coordinating mode at their worst value, where $b_m=c_m=1$, and therefore insert $A=\beta_{m,k}$ into \eqref{eq:Fmk}, which is at most the true ratio $\beta_{m,k}/b_m$; a smaller coefficient can only lower $F_{mk}$, so the gain is never overstated. Both check that the numerator in \eqref{eq:Fmk} is positive for $r\in[1/3,3]$ and abort the run otherwise, so no sign case arises in either stage; on that range each completion increases in $r$ and in $p$ and therefore decreases in $t$. Collecting the gains at their own frequency,
+\[
+E^{X}_{m}=\sum_{k>m}c_kF_{mk}(r,t;\beta_{m,k}),\qquad
+E^{Y}_{m}=\sum_{k>m}b_kF_{mk}(r^{-1},t;\beta_{m,k}),\qquad m=1,2,
+\]
+every gain is delivered once to the head completion of its own frequency, and no gain is reused in another stage. This is the cascade. The first two tail modes are stabilised by the higher tail modes before they meet the head, and the boosts are what allow the reserve to exceed the value at which the single-stage completion of the first mode would have turned negative.
+
+\emph{Stage 0.} The bare share of the tail coordinate of the opposite channel at frequency $m$ is $\alpha_m=\alpha_{0,m}+E^{Y}_m$ for $m=1,2$ on the second channel, $\alpha_m=\alpha_{0,m}+E^{X}_m$ on the first, and $\alpha_m=\alpha_{0,m}$ for $m\ge3$. In the normalisation in which the share is measured against the head weight, this is $A^{Y}_m=\alpha_m/b_0$ for the second channel and $A^{X}_m=\alpha_m/c_0$ for the first, so completing the square against the head coordinate leaves $c_mD^{X}_{0m}$ and $b_mD^{Y}_{0m}$ in the square of the head coordinate, where
 \begin{equation}\label{eq:D0}
 D_{0m}=\frac{r\,p_{0m}}2-\frac{S_{0m}^2}{4w_m\bigl(A_m+r^{-1}p_{0m}/(2w_m)\bigr)}
 =\frac{2p_{0m}\bigl(rw_mA_m-2/w_m\bigr)}{4w_mA_m+2r^{-1}p_{0m}} ,
 \end{equation}
-using $S_{0m}^2-p_{0m}^2=4p_{0m}/w_m$. The division by $b_0$ is exactly the dependence on the head weight. A positive numerator term increases in $r$, in $p_{0m}$ and in $A_m$, so it is bounded below using lower values of all three, $p_{0m}$ at the larger $t$ endpoint, and an upper bound for $r^{-1}$ in the denominator. A negative numerator term needs care with the signs: it is bounded below by dropping the positive denominator contribution $2r^{-1}p_{0m}$ and using $p_{0m}$ at the smaller $t$ endpoint, and then by multiplying by the upper Harnack ratio $c_m/c_0\le w_m$, with $b_m/b_0\le w_m$ on the mirror side. Using a lower ratio on a negative term would have the wrong sign, and this is the step where the upper line of \eqref{eq:harnack} is indispensable.
+using $S_{0m}^2-p_{0m}^2=4p_{0m}/w_m$, with $D^{X}_{0m}$ given by \eqref{eq:D0} at $r$ and $A_m=A^{Y}_m$, and $D^{Y}_{0m}$ the same expression at $r^{-1}$ and $A_m=A^{X}_m$. The division by the head weight is exactly the dependence on the head weight, and the divisor is never the weight of the tail that pays the completion; each gain multiplies its own ratio $c_m/c_0$ or $b_m/b_0$ rather than the frequency-one ratio, and both programs compare their production head routines with separately expanded rational objectives on every head interval, so a misindexed ratio or a doubled divisor cannot pass. A positive numerator term increases in $r$, in $p_{0m}$ and in $A_m$, so it is bounded below using lower values of all three, $p_{0m}$ at the larger $t$ endpoint, and an upper bound for $r^{-1}$ in the denominator. A negative numerator term needs care with the signs: it is bounded below by dropping the positive denominator contribution $2r^{-1}p_{0m}$ and using $p_{0m}$ at the smaller $t$ endpoint, and then by multiplying by the upper Harnack ratio $c_m/c_0\le w_m$, with $b_m/b_0\le w_m$ on the mirror side. Using a lower ratio on a negative term would have the wrong sign, and this is the step where the upper line of \eqref{eq:harnack} is indispensable.
 
 For $m>M$ only $\alpha_{\rm ext}$ is available. Since $w_m\ge43$ and $(43/3)\alpha_{\rm ext}>2/43$, every unretained Stage-0 completion has a positive numerator and may be discarded rather than bounded below. Thus no finite-frequency remainder of unknown sign is left anywhere.
 
 \subsection{The head criterion}
 
-After the two stages the two head coordinates $a_0$ and $z_0$ remain, with budget $\Phi_X$ and $\Phi_Y$. Writing $\tilde a=\sqrt{c_0}\,a_0$ and $\tilde z=\sqrt{b_0}\,z_0$, the head part is the form with matrix
+After the three stages the two head coordinates $a_0$ and $z_0$ remain, with budget $\Phi_X$ and $\Phi_Y$. Writing $\tilde a=\sqrt{c_0}\,a_0$ and $\tilde z=\sqrt{b_0}\,z_0$, the head part is the form with matrix
 \[
 M_{\rm head}=\begin{pmatrix}\Phi_X+\beta r&-(\beta+u)\\-(\beta+u)&\Phi_Y+\beta/r\end{pmatrix},
 \qquad \beta=\frac1{2t(1+t)},\quad u=\frac1{1+t},
 \]
 where
 \[
-\Phi_X=\frac{1-\dstar}{c_0}+\sum_{m=1}^{M}\frac{c_m}{c_0}D^{X}_{0m},\qquad
-\Phi_Y=\frac{1-\dstar}{b_0}+\sum_{m=1}^{M}\frac{b_m}{b_0}D^{Y}_{0m},
+\Phi_X=\frac{1-\dthree}{c_0}+\sum_{m=1}^{M}\frac{c_m}{c_0}D^{X}_{0m},\qquad
+\Phi_Y=\frac{1-\dthree}{b_0}+\sum_{m=1}^{M}\frac{b_m}{b_0}D^{Y}_{0m},
 \]
 and $D^{X}_{0m}$ and $D^{Y}_{0m}$ denote the lower bounds just described. If $b_0=0$ or $c_0=0$ the cross term vanishes and the claim is immediate. For the head pair, $p_{00}=1/(t(1+t))=2\beta$ and $S_{00}=(1+2t)/(t(1+t))=2(\beta+u)$.
 
@@ -361,7 +377,7 @@ a finite rational inequality. All acceptance predicates are of this form, for cl
 
 \subsection{Head weights and their minimisation}
 
-The quantities $\Phi_X$ and $\Phi_Y$ involve the head weights through the ratios $b_m/b_0$ and $c_m/c_0$, which \eqref{eq:env} bounds below by a maximum of affine functions of the head weight; on a head interval $[b_{\rm lo},b_{\rm hi}]$ one takes the smallest value of each. Writing $u_0=1/b_0$, a reserve $A/b_0+\sum_mC_mb_m/b_0$ with $C_m\ge0$ becomes, after \eqref{eq:env}, a maximum of affine functions of $u_0$, hence convex and piecewise affine in $u_0$, so its minimum over the interval is attained at an endpoint or at a crossing of two lines. Both programs verify rationally that the adjacent breakpoints are ordered, for every $m$, so enumerating adjacent crossings omits no switch of the envelope. On the first interval $(0,1/2]$ both verify that every additional line lies at or below the basic line $b_0/w_m$ at $b_0=1/2$, and since each such line has slope at least $1/w_m$ it stays below that line on all of $(0,1/2]$. Hence the envelope ratio is the constant $1/w_m$ there and $A/b_0+\sum C_m/w_m$ is minimised at $b_0=1/2$, so no limit $b_0\to0^+$ is missed.
+The quantities $\Phi_X$ and $\Phi_Y$ involve the head weights through the ratios $b_m/b_0$ and $c_m/c_0$, which \eqref{eq:env} bounds below by a maximum of affine functions of the head weight; on a head interval $[b_{\rm lo},b_{\rm hi}]$ one takes the smallest value of each. Writing $u_0=1/b_0$, a reserve $A/b_0+\sum_mC_mb_m/b_0$ with $C_m\ge0$ becomes, after \eqref{eq:env}, a maximum of affine functions of $u_0$, hence convex and piecewise affine in $u_0$, so its minimum over the interval is attained at an endpoint or at a crossing of two lines. Both programs enumerate every pairwise crossing of the ten lines and not only adjacent crossings, so no switch of the envelope is missed, and both verify unconditionally that the head intervals below have total length exactly one. On the first interval $(0,1/2]$ both verify that every additional line lies at or below the basic line $b_0/w_m$ at $b_0=1/2$, and since each such line has slope at least $1/w_m$ it stays below that line on all of $(0,1/2]$. Hence the envelope ratio is the constant $1/w_m$ there and $A/b_0+\sum C_m/w_m$ is minimised at $b_0=1/2$, so no limit $b_0\to0^+$ is missed.
 
 We partition $[0,1]$ at the knots
 \[
@@ -371,12 +387,12 @@ which gives $43$ consecutive intervals: the three intervals $(0,\tfrac12]$, $[\t
 
 \subsection{The exterior regions}
 
-The compact rectangle $[1/3,3]\times[0,1/2]$ is where the cascade and the head minimisation are needed. Outside it a cruder accounting suffices, and it uses no Stage~1. Every tail coordinate keeps the share $\alpha_{\rm ext}=77/125$ of its bare mass, because its row cost is at most $33/500$. A nonnegative Stage-0 completion is dropped, and a negative one is charged against the reserve. What remains to be shown is that the two head coordinates keep enough, and for that two unassisted estimates of the head pair are recorded in~\cite{finiteenergy} and reused here:
+The compact rectangle $[1/3,3]\times[0,1/2]$ is where the cascade and the head minimisation are needed. Outside it a cruder accounting suffices, and it uses neither Stage~1 nor Stage~2. Every tail coordinate keeps the share $\alpha_{\rm ext}=6151/10000$ of its bare mass, because its row cost is at most $33/500$. A nonnegative Stage-0 completion is dropped, and a negative one is charged against the reserve. What remains to be shown is that the two head coordinates keep enough, and for that two unassisted estimates of the head pair are recorded in~\cite{finiteenergy} and reused here:
 \begin{equation}\label{eq:headest}
 \text{kept fraction of the head pair}\ \ge\ 1-\frac{2}{r+r^{-1}},
 \qquad\text{and}\qquad \text{kept fraction}\ \ge\ \frac{t}{1+t}.
 \end{equation}
-The second is the immediate one: dropping the positive square $\beta(\sqrt r\,\tilde a-\tilde z/\sqrt r)^2$ leaves the factor $1-u=t/(1+t)$ with $u=1/(1+t)$. The first does not degrade as $t\downarrow0$, which is why the far-imbalance case uses it, while the second is what controls large energy. Either estimate, less the charged completions, must exceed $\dstar$; when it does, both head coordinates keep at least the fraction $\dstar$ of their bare mass, and \eqref{eq:edge} follows. Three cases cover the complement of the compact rectangle.
+The second is the immediate one: dropping the positive square $\beta(\sqrt r\,\tilde a-\tilde z/\sqrt r)^2$ leaves the factor $1-u=t/(1+t)$ with $u=1/(1+t)$. The first does not degrade as $t\downarrow0$, which is why the far-imbalance case uses it, while the second is what controls large energy. Either estimate, less the charged completions, must exceed $\dthree$; when it does, both head coordinates keep at least the fraction $\dthree$ of their bare mass, and \eqref{eq:edge} follows. Three cases cover the complement of the compact rectangle.
 
 \emph{Far imbalance, $r\le1/4$.} The case $r\ge4$ follows by the channel swap. Here the first estimate in \eqref{eq:headest} is at least $9/17$, since $r+r^{-1}\ge17/4$, and it is uniform in $t$. For every $m\ge1$ and $t\ge0$, dropping the nonnegative term $rw_mA_m$ from the numerator and the term $2r^{-1}p_{0m}$ from the denominator in \eqref{eq:D0} gives
 \[
@@ -388,44 +404,46 @@ using $p_{0m}\le(2m+1)/(m^2(m+1)^2)$. Since $(2m+1)m^2(m+1)^2>2m^5$, the terms w
 \]
 The fraction that remains is therefore at least
 \[
-\frac9{17}-\frac{7/75}{\alpha_{\rm ext}}=\frac{212}{561}\approx0.377897>\dstar .
+\frac9{17}-\frac{7/75}{\alpha_{\rm ext}}=\frac{118477}{313701}\approx0.377675>\dthree .
 \]
 
-\emph{Intermediate imbalance, $1/4\le r\le1/3$.} The case $3\le r\le4$ again follows by the swap. Now $r+r^{-1}\ge10/3$, so the first estimate in \eqref{eq:headest} is at least $2/5$. For $m\ge2$ one has $w_m\ge5$ and $r\alpha_{\rm ext}/2\ge77/1000>1/25\ge w_m^{-2}$, so those completions are positive and only $m=1$ can be negative. Using $p_{0,1}\le3/4$ and dropping the positive denominator term, $D_{0,1}\ge\frac34(\alpha_{\rm ext}/8-1/9)/\alpha_{\rm ext}$, and the fraction that remains is at least
+\emph{Intermediate imbalance, $1/4\le r\le1/3$.} The case $3\le r\le4$ again follows by the swap. Now $r+r^{-1}\ge10/3$, so the first estimate in \eqref{eq:headest} is at least $2/5$. For $m\ge2$ one has $w_m\ge5$ and $\alpha_{\rm ext}/8=6151/80000>1/25\ge w_m^{-2}$, so those completions are positive and only $m=1$ can be negative. Using $p_{0,1}\le3/4$ and dropping the positive denominator term, $D_{0,1}\ge\frac34(\alpha_{\rm ext}/8-1/9)/\alpha_{\rm ext}$, and the fraction that remains is at least
 \[
-\frac25+\frac34\cdot\frac{\alpha_{\rm ext}/8-1/9}{\alpha_{\rm ext}}=\frac{13249}{36960}\approx0.358469>\dstar .
+\frac25+\frac34\cdot\frac{\alpha_{\rm ext}/8-1/9}{\alpha_{\rm ext}}=\frac{1057787}{2952480}\approx0.358271>\dthree .
 \]
 
 \emph{Large energy, $t\ge1/2$ on $[1/3,3]$.} Here $r$ and $r^{-1}$ both lie in $[1/3,3]$ and the second estimate in \eqref{eq:headest} gives at least $1/3$. The completions with $m\ge2$ are again positive. For $m=1$ one has $p_{0,1}=3/((t+1)(t+4))\le4/9$ and $\alpha_{\rm ext}/6-1/9<0$, so $D_{0,1}\ge\frac49(\alpha_{\rm ext}/6-1/9)/\alpha_{\rm ext}$, and the fraction that remains is at least
 \[
-\frac13+\frac49\cdot\frac{\alpha_{\rm ext}/6-1/9}{\alpha_{\rm ext}}=\frac{2041}{6237}\approx0.327241>\dstar .
+\frac13+\frac49\cdot\frac{\alpha_{\rm ext}/6-1/9}{\alpha_{\rm ext}}=\frac{162983}{498231}\approx0.327123>\dthree .
 \]
 Together with the compact rectangle and its reflection, these three cases exhaust $r>0$, $t>0$.
 
 \begin{proof}[Completion of the proof of Proposition~\ref{prop:edge}]
-Fix $t>0$, $r>0$ and admissible $b,c$. If $r\notin[1/3,3]$ or $t\ge1/2$ the exterior cases just proved give both head coordinates and every tail coordinate at least the fraction $\dstar$ of their bare mass, which is \eqref{eq:edge}; adding back the nonnegative squares discarded along the way returns \eqref{eq:block}, and summing the blocks recovers $B_r+\tfrac12I_{xy}\ge\dstar B_r$. If $r\in[1/3,3]$ and $t\in(0,1/2)$, the head intervals containing $b_0$ and $c_0$ are two of the $43$ intervals, and the finite certificate of Section~\ref{sec:cert} shows that the sufficient condition \eqref{eq:rect} holds for that rectangle and that pair of head intervals, with the lower values $P_X,P_Y$ obtained from \eqref{eq:env} and \eqref{eq:D0} and \eqref{eq:D1}. Then \eqref{eq:det} holds, and the same back-substitution gives the edge inequality.
+Fix $t>0$, $r>0$ and admissible $b,c$. If $r\notin[1/3,3]$ or $t\ge1/2$ the exterior cases just proved give both head coordinates and every tail coordinate at least the fraction $\dthree$ of their bare mass, which is \eqref{eq:edge}; adding back the nonnegative squares discarded along the way returns \eqref{eq:block}, and summing the blocks recovers $B_r+\tfrac12I_{xy}\ge\dthree B_r$. If $r\in[1/3,3]$ and $t\in(0,1/2)$, the head intervals containing $b_0$ and $c_0$ are two of the $43$ intervals, and the finite certificate of Section~\ref{sec:cert} shows that the sufficient condition \eqref{eq:rect} holds for that rectangle and that pair of head intervals, with the lower values $P_X,P_Y$ obtained from \eqref{eq:env}, \eqref{eq:Fmk} and \eqref{eq:D0}. Then \eqref{eq:det} holds, and the same back-substitution gives the edge inequality.
 \end{proof}
 
 \section{The finite certificate}\label{sec:cert}
 
-It remains to show that \eqref{eq:rect} holds on the compact domain, for every rectangle of a complete covering and every pair of head intervals, with the reserve $\dstar=159/500$. This is a finite computation in exact rational arithmetic, and it was carried out twice by programs that do not share code.
+It remains to show that \eqref{eq:rect} holds on the compact domain, for every rectangle of a complete covering and every pair of head intervals, with the reserve $\dthree=3189/10000$. This is a finite computation in exact rational arithmetic, and it was carried out twice by programs that do not share code.
 
-\emph{The domain and the covering.} The primary program uses the symmetry $r\leftrightarrow r^{-1}$, which exchanges the two channels of a pair and maps the problem to itself, to reduce to $[1,3]\times[0,1/2]$, an area of $1$. It subdivides by bisection, halving the $t$ interval when the $r$ interval is less than three halves of it and the $r$ interval otherwise, and it stops when \eqref{eq:rect} holds at the certified reserve and for all $43^2=1849$ pairs of head intervals. It terminates at depth $20$ with $159$ leaves, and its exact rational leaf areas sum to exactly $1$, so no point of the domain is left uncovered. A rectangle that has not been accepted at depth $22$ aborts the run.
+\emph{The domain and the covering.} The primary program uses the symmetry $r\leftrightarrow r^{-1}$, which exchanges the two channels of a pair and maps the problem to itself, to reduce to $[1,3]\times[0,1/2]$, an area of $1$. It subdivides by bisection, halving the $t$ interval when the $r$ interval is less than three halves of it and the $r$ interval otherwise, and it stops when \eqref{eq:rect} holds at the certified reserve and for all $43^2=1849$ pairs of head intervals. It terminates at depth $24$ with $367$ leaves, and its exact rational leaf areas sum to exactly $1$, so no point of the domain is left uncovered. A rectangle that has not been accepted at depth $30$ aborts the run.
 
-The second program was written separately, does not import the first, and does not use the symmetry. It covers the full domain $[1/3,3]\times[0,1/2]$, of area $4/3$, by four-way subdivision, decides the sign of every completion in \eqref{eq:D1} by its own rationalisation of the numerator $2p_{1k}(rw_k\beta_{1,k}-2/(3w_k))$ rather than by a reused comparison, and carries a separate integrity calculation for the ordered tangent intersections. It terminates at depth $11$ with $466$ leaves whose areas sum to exactly $4/3$, with an abort at depth $12$.
+The second program was written separately, does not import the first, and does not use the symmetry. It covers the full domain $[1/3,3]\times[0,1/2]$, of area $4/3$, by four-way subdivision, decides the sign of every completion in \eqref{eq:Fmk} for both stages and for the head by its own rationalisation of the numerator rather than by a reused comparison, and carries a separate integrity calculation for all pairwise tangent intersections. It terminates at depth $13$ with $1036$ leaves whose areas sum to exactly $4/3$, with an abort at depth $16$.
 
-\emph{Arithmetic.} Neither program uses floating point. All quantities are Python fractions or integers scaled by $Q=10^{12}$, and every inequality is evaluated with explicit and checked rounding directions: positive lower bounds are rounded downward, subtracted costs and denominator upper bounds upward. The tangent intercepts of \eqref{eq:tangent} are rounded downward to denominator $10^8$ and verified to be nonpositive and to satisfy $L_{\xi,m}+C_{\xi,m}\le1$, as an admissible lower bound must. The constant $\pi$ is enclosed by Machin's formula $16\arctan(1/5)-4\arctan(1/239)$ with alternating rational Leibniz remainders, the two programs using different series lengths $(14,6)$ and $(12,8)$, and the arctangent is enclosed by different recursively reduced series. The two decimal enclosures of Theorem~\ref{thm:main} are checked by comparing squared rational endpoints against the exact squared numerators,
+\emph{Arithmetic.} Neither program uses floating point. All quantities are Python fractions or integers scaled by $Q=10^{12}$ in the first program and by $Q=10^{13}$ in the second, and every inequality is evaluated with explicit and checked rounding directions: positive lower bounds are rounded downward, subtracted costs and denominator upper bounds upward. The tangent intercepts of \eqref{eq:tangent} are rounded downward to denominators $10^8$ and $10^9$ and verified to be nonpositive and to satisfy $L_{\xi,m}+C_{\xi,m}\le1$, as an admissible lower bound must. The constant $\pi$ is enclosed by Machin's formula $16\arctan(1/5)-4\arctan(1/239)$ with alternating rational Leibniz remainders, the two programs using different series lengths $(32,16)$ and $(32,18)$, and the arctangent is enclosed by different recursively reduced series. The two decimal enclosures of Theorem~\ref{thm:main} are checked by comparing squared rational endpoints against the exact squared numerators,
 \[
-(2\pi_{\rm hi}c_{\rm lo})^2<\frac{341}{250}<(2\pi_{\rm lo}c_{\rm hi})^2,\qquad
-(2\pi_{\rm hi}c_{\rm lo}')^2<\frac{6821}{5000}<(2\pi_{\rm lo}c_{\rm hi}')^2,
+(2\pi_{\rm hi}c_{\rm lo})^2<\frac{6811}{5000}<(2\pi_{\rm lo}c_{\rm hi})^2,\qquad
+(2\pi_{\rm hi}c_{\rm lo}')^2<\frac{341}{250}<(2\pi_{\rm lo}c_{\rm hi}')^2,
 \]
-so the printed digits follow from the rational certificate and not from a library constant.
+so the printed digits follow from the rational certificate and not from a library constant. These two comparisons are carried out by a separate exact rational endpoint calculation recorded in the transcript; the covering programs themselves certify the rational forms of the two constants.
 
-\emph{What the certificate covers.} It covers the finite rational inequalities: the tail row costs \eqref{eq:qred} and the cap \eqref{eq:qcap}, the completion formulas \eqref{eq:D1} and \eqref{eq:D0} with their signs, the ordered breakpoints of the head envelope, the two covering trees with their areas and depth caps, and the three exterior comparisons including the tail sum below $7/75$. It also verifies by SHA-256 hash thirteen inherited proof and arithmetic files on which the argument rests, so that an accidental change to an inherited input cannot pass silently.
+\emph{What the certificate covers.} It covers the finite rational inequalities: the tail row costs \eqref{eq:qred} and the cap \eqref{eq:qcap}, the completion formulas \eqref{eq:Fmk} and \eqref{eq:D0} with their signs, the breakpoints of the head envelope and the total length of the head intervals, the two covering trees with their areas and depth caps, and the three exterior comparisons including the tail sum below $7/75$. The transcript also records a SHA-256 hash for each of the two programs and for each inherited proof record on which the argument rests, so that an accidental change to a shipped input cannot pass silently, even though the programs themselves carry no internal pins.
 
-\emph{What the certificate does not cover.} It does not cover the Harnack inequalities \eqref{eq:harnack}, the width cone \eqref{eq:cone}, the Poisson envelope of Proposition~\ref{prop:poisson}, the positive-resolvent reduction of Section~\ref{sec:reduction}, or the derivation of the exterior formulas. Those are analytic statements, proved above in prose, and the programs only re-evaluate the rational comparisons that the prose leaves to arithmetic. The two programs also share the same decomposition parameters, $M=20$, the $7/10$ split, the eight tangent points and the $43$ head intervals, and they copy the same exterior block; this is an honest limit on their independence, and it means that the certificate tests the arithmetic of the covering rather than the choice of decomposition. That choice is not certified by computation; it is fixed by the estimates of Section~\ref{sec:proof}, each of which is an explicit inequality in the text.
+\emph{What the certificate does not cover.} It does not cover the Harnack inequalities \eqref{eq:harnack}, the width cone \eqref{eq:cone}, the Poisson envelope of Proposition~\ref{prop:poisson}, the positive-resolvent reduction of Section~\ref{sec:reduction}, or the derivation of the exterior formulas. Those are analytic statements, proved above in prose, and the programs only re-evaluate the rational comparisons that the prose leaves to arithmetic. The two programs also share the same decomposition parameters, $M=20$, the stage shares, the eight tangent points and the $43$ head intervals, and they copy the same exterior block; this is an honest limit on their independence, and it means that the certificate tests the arithmetic of the covering rather than the choice of decomposition. That choice is not certified by computation; it is fixed by the estimates of Section~\ref{sec:proof}, each of which is an explicit inequality in the text. The certificate is what makes the finite part of the argument certified rather than numerical; it is not a formalisation of the analysis, and no proof assistant is involved.
 
-\emph{Guarded failure.} Each program carries six deliberately corrupted runs, chosen so that each corrupts a different ingredient. Four corrupt the shared scaffold: a wrong pin hash, a wrong strict reserve ratio, a covering domain shrunk from $r\le3$ to $r\le2$, and a reserve raised past feasibility. The other two differ between the programs: the first alters the infinite-tail cost and replaces the centered tangent slope by one that is too steep to be an admissible lower bound, and the second corrupts the sign of a Stage-0 completion and gives a tangent intercept the wrong sign. Every one of the twelve must exit with status $1$ and a line beginning \texttt{REJECT}, rather than crash from a missing dependency, and the driver compares the observed status with the expected one and aborts otherwise. The purpose is narrow and worth stating: it shows that the acceptance predicates actually read the quantities they claim to read, and that a plausible arithmetic slip does not survive.
+\emph{Guarded failure.} Each program carries ten deliberately corrupted runs, chosen so that each corrupts a different ingredient of the production path: the disjoint stage allocation of the bare budget, the infinite-tail cost, the difference-of-squares identity \eqref{eq:idm}, the completion denominator, an outward tangent intercept, the covering area, an unresolved depth cell, the strict reporting margin, the ratio index of the head completion, and the head divisor. Every one of the twenty must exit with status $1$ and a line beginning \texttt{REJECT} at a mathematical guard, rather than crash from a missing dependency or an argument error, and the transcript compares the observed status with the expected one and aborts otherwise. A run that times out or crashes is not counted. The purpose is narrow and worth stating: it shows that the acceptance predicates actually read the quantities they claim to read, and that a plausible arithmetic slip does not survive.
+
+\emph{The reserve search.} The certified reserve is the largest the search reached inside its budget, not the largest the scheme can reach. Exact bisection on the grid $d=j/10000$ certified $3188/10000$ against the shallower depth caps of the first version and $3189/10000$ against the caps used here; the first attempt at $3189/10000$ failed only at those caps, because the printed zero-width centre predicates already passed. Raising a depth cap is bookkeeping and weakens no inequality. Increasing $d$ decreases every budget and every positive gain, so the fixed tree's acceptance predicate is monotone in $d$ and bisection is justified. The next grid point $3190/10000$ exhausted the remaining time budget and its second program was never started, so that value is unresolved: not rejected, and not shown to be impossible.
 
 \section{Comparison, limitations and the open question}\label{sec:compare}
 
@@ -438,8 +456,9 @@ so the printed digits follow from the rational certificate and not from a librar
 constant & class and status & exact form & decimal & above $\Cinf$ \\
 \hline
 $\Cinf$ & scalar, exact, from~\cite{finite} & transcendental & $0.1827262478$ & \\
-$\Cstar$ & centered, supremum, proved here & $\sqrt{341/250}/(2\pi)$ & $0.1858777115$ & $1.725\%$ \\
-$\Crep$ & centered, strict, proved here & $\sqrt{6821/5000}/(2\pi)$ & $0.1858913384$ & $1.732\%$ \\
+$\Cthree$ & centered, supremum, proved here & $\sqrt{6811/5000}/(2\pi)$ & $0.1857550244$ & $1.658\%$ \\
+$\Cstar$ & centered, strict, proved here & $\sqrt{341/250}/(2\pi)$ & $0.1858777115$ & $1.725\%$ \\
+$\Crep$ & centered, strict, version 1 & $\sqrt{6821/5000}/(2\pi)$ & $0.1858913384$ & $1.732\%$ \\
 $\sqrt{683/500}/(2\pi)$ & centered, supremum, from~\cite{finiteenergy} & $\sqrt{683/500}/(2\pi)$ & $0.1860139355$ & $1.799\%$ \\
 $\Ccent$ & centered, strict, from~\cite{finiteenergy} & $\sqrt{41/30}/(2\pi)$ & $0.1860593214$ & $1.824\%$ \\
 $\Ccaus$ & causal, strict, from~\cite{finiteenergy} & $\sqrt{45/32}/(2\pi)$ & $0.1887345454$ & $3.288\%$ \\
@@ -448,14 +467,14 @@ $C_1$ & causal, multipoint, from~\cite{optimum} & $\sqrt{413/250}/(2\pi)$ & $0.2
 $U$ & centered, from~\cite{predecessor} & $\sqrt{6466219/3576050}/(2\pi)$ & $0.2140146706$ & $17.12\%$ \\
 \hline
 \end{tabular}
-\caption{The exact scalar constant, the two constants proved here, and the successive coupled-channel ceilings. The decimals are rounded to ten places, and the last column is the relative excess over $\Cinf$. The causal constant is unchanged by this paper.}\label{tab:constants}
+\caption{The exact scalar constant, the two constants proved here, and the successive coupled-channel ceilings. The decimals are rounded to ten places, and the last column is the relative excess over $\Cinf$. The causal constant is unchanged by this paper. The first version of this preprint used $\sqrt{341/250}/(2\pi)$ as the constant of its supremum bound, and that number now carries the strict statement.}\label{tab:constants}
 \end{table}
 
 Table~\ref{tab:constants} lists the numbers. The ordering
 \[
-\Cinf<\Cstar<\Crep<\frac{\sqrt{683/500}}{2\pi}<\Ccent<\Ccaus<C_{21}<C_1<U
+\Cinf<\Cthree<\Cstar<\Crep<\frac{\sqrt{683/500}}{2\pi}<\Ccent<\Ccaus<C_{21}<C_1<U
 \]
-is a chain of strict inequalities between explicit numbers, the middle three being the constants of~\cite{finiteenergy} and the last three those of~\cite{optimum,predecessor}. The new constant improves both constants of \cite{finiteenergy} for the centered class and touches nothing else. Measured as relative excess over $\Cinf$, the centered figure moves from $1.824\%$ to $1.732\%$ for the strict statement and from $1.799\%$ to $1.725\%$ for the supremum, so $4.1\%$ of the excess that was still open above $\Cinf$ has been closed for the supremum and $5.0\%$ for the strict statement. Measured as the fraction of the excess of $C_{21}$ that a constant removes, the figure moves from $73.79\%$ for the strict constant of~\cite{finiteenergy} to $75.11\%$ for $\Crep$ here.
+is a chain of strict inequalities between explicit numbers, the middle three being the constants of~\cite{finiteenergy} and the last three those of~\cite{optimum,predecessor}. The supremum bound proved here improves the one of the first release of this preprint, which used the smaller reserve $159/500$ and the value $\sqrt{341/250}/(2\pi)$ kept in the table for comparison, and it improves both constants of~\cite{finiteenergy} for the centered class; it touches nothing else. $\Cthree$ is $0.066\%$ below $\Cstar$, which is now the constant of the strict statement, and $\Cthree$ is the sharpest centered constant in the table, while $\Cstar$ is the sharpest strict centered constant. Measured as relative excess over $\Cinf$, the centered figure moves from $1.824\%$ to $1.725\%$ for the strict statement and from $1.799\%$ to $1.658\%$ for the supremum, so $7.9\%$ of the excess that was still open above $\Cinf$ has been closed for the supremum and $5.4\%$ for the strict statement. Measured as the fraction of the excess of $C_{21}$ that a constant removes, the figure moves from $73.79\%$ for the strict constant of~\cite{finiteenergy} to $75.22\%$ for $\Cstar$ here, and the supremum bound removes $76.18\%$.
 
 \subsection{The floor of the method}
 
@@ -463,7 +482,9 @@ The edge-reserve argument has a limit that was proved in~\cite{finiteenergy}. Le
 \[
 \frac{\sqrt{\Lambda}}{2\pi}\ >\ 0.185411 .
 \]
-This is a statement about the method, not a lower bound for $S_{\mathrm{cent}}$, and a proof that used the normal equation to tie the weights to the masses would not be subject to it. The reserve used here is $\dstar=0.318$, which is below the floor value $0.321407$ and therefore consistent with it, and the constant proved here exceeds the floor by $0.25\%$, so the floor lies at the fraction $0.852$ of $[\Cinf,\Cstar]$. The remaining $15\%$ of the interval is what a different proof, not a better implementation, would have to reach.
+This is a statement about the method, not a lower bound for $S_{\mathrm{cent}}$, and a proof that used the normal equation to tie the weights to the masses would not be subject to it. The floor governs the frozen-sequence reserve argument, in which one weight sequence is fixed in advance and then charged; it says nothing about the supremum itself. The reserve used here is $\dthree=0.3189$, which is below the floor value $0.321407$ and therefore consistent with it, and the constant proved here exceeds the floor by $0.19\%$, so the floor lies at the fraction $0.886$ of $[\Cinf,\Cthree]$. The remaining $11\%$ of the interval is what a different proof, not a better implementation, would have to reach.
+
+A direct sweep of the edge ratio over six hundred admissible centered Poisson weight sequences, at thirty-five frequencies and on a finite grid in the imbalance and the energy, observed the smallest reserve $0.32147971$ at $r=1$, $t=10^{-4}$ and $b_0=c_0=0.92$. That observation is numerical. It is a finite-resolution minimum and not an infimum, it is not an instability of any coupled branch, and it does not replace the analytic floor above; it is consistent with it, in the same way that it is consistent with the certified reserve $0.3189$.
 
 \subsection{What the result does and does not say}
 
@@ -475,25 +496,23 @@ Second, the class is a subclass. The glue is retarded and the same nonnegative t
 
 Third, the widths used satisfy the cone \eqref{eq:cone}. A branch whose widths leave the cone is not covered, and the causal class, where only \eqref{eq:harnack} is retained, keeps the larger constant $\Ccaus$ of~\cite{finiteenergy}.
 
-Fourth, the two bounds are different statements and both are needed. The supremum bound $S_{\mathrm{cent}}\le\Cstar$ gives no strict inequality at a particular model, since endpoint stability without a neighbourhood theorem would not justify it; the strict statement follows from it through $\Cstar<\Crep$, the bare gap $1/6821$ recording the slack at the reported temperature. Neither requires monotonicity of the onset in temperature.
+Fourth, the two bounds are different statements and both are needed. The supremum bound $S_{\mathrm{cent}}\le\Cthree$ gives no strict inequality at a particular model, since endpoint stability without a neighbourhood theorem would not justify it; the strict statement follows from it through $\Cthree<\Cstar$, the bare gap $9/6820$ recording the slack at the reported temperature. Neither requires monotonicity of the onset in temperature.
 
 \subsection{The open question}
 
-Let $S_{\mathrm{cent}}$ be the supremum defined in Theorem~\ref{thm:main}. From \cite{finite,predecessor} one has $\Cinf\le S_{\mathrm{cent}}$, because the scalar case belongs to the class and its onset approaches $\Cinf\sqrt\rho$ along soft sequences, and from Theorem~\ref{thm:main} one has $S_{\mathrm{cent}}\le\Cstar$. Thus
+Let $S_{\mathrm{cent}}$ be the supremum defined in Theorem~\ref{thm:main}. From \cite{finite,predecessor} one has $\Cinf\le S_{\mathrm{cent}}$, because the scalar case belongs to the class and its onset approaches $\Cinf\sqrt\rho$ along soft sequences, and from Theorem~\ref{thm:main} one has $S_{\mathrm{cent}}\le\Cthree$. Thus
 \[
-\Cinf\ \le\ S_{\mathrm{cent}}\ \le\ \Cstar,\qquad \frac{\Cstar}{\Cinf}-1=1.725\% .
+\Cinf\ \le\ S_{\mathrm{cent}}\ \le\ \Cthree,\qquad \frac{\Cthree}{\Cinf}-1=1.658\% .
 \]
-Whether $S_{\mathrm{cent}}=\Cinf$ or $S_{\mathrm{cent}}>\Cinf$ is open. Nothing in this paper or in \cite{predecessor,optimum,finiteenergy} decides it. For a single channel the supremum is $\Cinf$, and for coupled channels with energy-independent density of states the bound $\Cinf$ holds as well, so the question concerns only several channels with different energy-dependent profiles. The exploratory float searches recorded in~\cite{finiteenergy} found no witness above $\Cinf$, but they enclose neither the finite pairing blocks nor the truncated normal tails, so they prove nothing either way. The two natural routes to a smaller constant are a comparison that retains the coupled normal masses across channels and frequencies at once, and an arrangement of the operator that leaves the edge-by-edge form; the floor excludes neither. A certified excess witness, if one exists, would have to be an actual branch rather than a frozen weight sequence.
+Whether $S_{\mathrm{cent}}=\Cinf$ or $S_{\mathrm{cent}}>\Cinf$ is open, and this paper decides neither branch. Nor does it decide whether $S_{\mathrm{cent}}=\Cthree$: the constant is an upper bound on the supremum, and nothing here exhibits a model that attains it, or rules out one that does. Nothing in this paper or in \cite{predecessor,optimum,finiteenergy} decides the position of $S_{\mathrm{cent}}$ between those two numbers. For a single channel the supremum is $\Cinf$, and for coupled channels with energy-independent density of states the bound $\Cinf$ holds as well, so the question concerns only several channels with different energy-dependent profiles. The exploratory float searches recorded in~\cite{finiteenergy} found no witness above $\Cinf$, but they enclose neither the finite pairing blocks nor the truncated normal tails, so they prove nothing either way. A finite-resolution screen of twenty-four generated two- and three-channel models, at forty-eight frequencies and a pairing cutoff of thirty-two, numerical and without enclosure, found the largest gain $0.99993728$, so every onset it examined stayed below the scalar constant on a bounded search; the same screen found a fixed-angular trial understating the gain by up to $0.51$, and a screen of that kind is evidence about the search and not about a supremum. The two natural routes to a smaller constant are a comparison that retains the coupled normal masses across channels and frequencies at once, and an arrangement of the operator that leaves the edge-by-edge form; the floor excludes neither. A certified excess witness, if one exists, would have to be an actual branch rather than a frozen weight sequence, and it would have to beat the reserve, which a longer but equally generic search cannot do.
 
 \section{Reproducibility and data availability}\label{sec:repro}
 
-A replay supplement accompanies this preprint. It contains the written proof from which this paper is drawn, the two exact covering programs, the mutation driver, the closure pin file with thirteen SHA-256 hashes of inherited proofs and arithmetic, and the execution transcript. The programs use only the Python standard library; no interval package, no compiled extension and no network access are involved.
+A replay supplement accompanies this preprint. It contains the written proof from which this paper is drawn, together with the reserve search record, the two exact covering programs, the execution transcript with its mutation receipts, and the recorded SHA-256 hashes of the programs and of the inherited proof records. The programs use only the Python standard library; no interval package, no compiled extension and no network access are involved.
 
-From the directory holding the supplement one runs
-\begin{center}\texttt{python -B verify.py}\end{center}
-and obtains exit status $0$ when everything passes. The driver runs the primary cover, which must exit $0$ and print the certified covering with $159$ leaves, maximum depth $20$ and area $1$; the independent cover, which must exit $0$ and print $466$ leaves, maximum depth $11$ and area $4/3$; and twelve deliberately corrupted runs, six of each program, each of which must exit $1$ and print a line beginning \texttt{REJECT}. Both base runs also print the exact decimal enclosures of the two constants. The whole run takes about two and a half minutes. Everything analytic, namely Proposition~\ref{prop:poisson}, the Harnack inequalities, the width cone, the reduction of Section~\ref{sec:reduction} and the derivation of the exterior estimates, is in the proof above and not in the replay.
+From the directory holding the supplement one runs each of the two covering programs once, in Python with no arguments, and obtains exit status $0$ from each when everything passes. The primary cover must exit $0$ and print the certified covering with $367$ leaves, maximum depth $24$ and area $1$; the independent cover must exit $0$ and print $1036$ leaves, maximum depth $13$ and area $4/3$. The transcript then records ten deliberately corrupted runs of each program, each of which must exit $1$ and print a line beginning \texttt{REJECT} at a documented mathematical guard. Both base runs print the exact rational forms $\sqrt{6811/5000}/(2\pi)$ and $\sqrt{341/250}/(2\pi)$, and the transcript records the separate exact rational squared-endpoint check that certifies the decimal enclosures of Theorem~\ref{thm:main}. Everything analytic, namely Proposition~\ref{prop:poisson}, the Harnack inequalities, the width cone, the reduction of Section~\ref{sec:reduction} and the derivation of the exterior estimates, is in the proof above and not in the replay.
 
-\emph{Data availability.} This work uses no experimental data and no material samples. All computational evidence is the replay supplement, released as DOI \DOI{\SUPPLEMENTDOI}, which holds the two checkers, the mutation driver, the pin file and the transcript; the paper record is DOI \DOI{\PAPERDOI}. The earlier results on which the argument rests are cited by DOI in the references.
+\emph{Data availability.} This work uses no experimental data and no material samples. All computational evidence is the replay supplement, released as DOI \DOI{\SUPPLEMENTDOI}, which holds the two checkers, the reserve search record and the transcript with its mutation receipts and hashes; the paper record is DOI \DOI{\PAPERDOI}. The earlier results on which the argument rests are cited by DOI in the references.
 
 \section*{Supporting material and disclosure}
 
