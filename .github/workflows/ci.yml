@@ -106,7 +106,7 @@ jobs:
           grep -qF 'Separate AI agents performed the independent reviews.' README.md
           grep -qF 'The floor `0.185411` is a limit of the edge-reserve method' README.md
           grep -qF 'Whether the supremum `S_cent` equals `C_inf` or lies strictly above it is open.' README.md
-          grep -qF 'review records removed from the tree; available in version 1 history' README.md
+          grep -qF 'Review records removed from the tree; available in version 1 history' README.md
           if grep -nE '—|D:/|C:/|/scratch/|ceiling-20261118|UNIV-GLUE|OPTIMUM2|\bMac\b|\blane\b' replay/CHECKS.txt records/aniso-close/CHECKS.txt; then exit 1; fi
   paper:
     runs-on: ubuntu-latest
